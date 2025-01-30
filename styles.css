@@ -1,7 +1,7 @@
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
     background-size: cover;
-    opacity: 70%;
+    opacity: 100%;
     font-family: Roboto, sans-serif;
     font-weight: bold;
     margin: 0;
@@ -10,10 +10,6 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-.lastvideo {
-    margin-bottom: 25px;
 }
 
 .error-container {
