@@ -1,7 +1,7 @@
 body {
-    background:url(giphy.webp);
+    background-color: rgb(255, 255, 255);
     background-size: cover;
-    opacity: 50%;
+    opacity: 70%;
     font-family: Roboto, sans-serif;
     font-weight: bold;
     margin: 0;
@@ -10,7 +10,10 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100vh;
+}
+
+.lastvideo {
+    margin-bottom: 25px;
 }
 
 .error-container {
