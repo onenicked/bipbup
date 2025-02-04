@@ -1,8 +1,8 @@
 body {
-    background-color: rgb(0, 0, 0);
+    background-color: #1b1b1b;
     background-size: cover;
     opacity: 100%;
-    font-family: Roboto, sans-serif;
+    font-family: "Geologica", serif;
     font-weight: bold;
     margin: 0;
     padding: 0;
@@ -46,7 +46,7 @@ body {
 }
 
 .error-container a:hover {
-    background-color: #1d1d1d77;
+    background-color: #35353577;
     color: white;
 }
 
