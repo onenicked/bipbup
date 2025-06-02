@@ -1,0 +1,60 @@
+body {
+    background-image: url(../images/bipbupblack.png);
+    background-size: fill;
+    opacity: 100%;
+    font-family: "Geologica", serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.bigbip {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.bigbip h1 {
+    font-size: 100px;
+    margin: 400px 0px 0px;
+    line-height: 1;
+    color: white;
+    position: center;
+    display: inline-block;
+}
+
+.bigbip a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 150px;
+    margin-top: 10px;
+    background-color: #6d6d6d27;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bigbip a:hover {
+    background-color: #00000077;
+    color: white;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.bigbip h1 {
+    animation: float 3s infinite ease-in-out;
+}

@@ -1,0 +1,139 @@
+body {
+    background-image: url(../images/bipbupblack.png);
+    background-size: fill;
+    opacity: 100%;
+    font-family: "Geologica", serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.links {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.links p {
+    font-size: 18px;
+    margin: center;
+    color: #ffffff;
+}
+
+.vk {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.tg {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.yt {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.chattg {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.da {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.ds {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.twitch {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.player {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.backnone {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.links h1 {
+    animation: float 3s infinite ease-in-out;
+}

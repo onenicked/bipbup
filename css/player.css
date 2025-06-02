@@ -1,0 +1,33 @@
+body {
+    background-image: url(../images/bipbupblack.png);
+    background-size: fill;
+    opacity: 100%;
+    font-family: "Geologica", serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.player {
+    max-width: 800px;
+    padding: 20px;
+}
+
+.player h1 {
+    font-size: 30px;
+    margin: 50px 0px 0px;
+    line-height: 1;
+    color: white;
+    position: center;
+    display: inline-block;
+}
+
+.player p {
+    font-size: 15px;
+    margin: center;
+    color: #ffffff;
+}
