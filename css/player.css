@@ -1,6 +1,6 @@
 body {
     background-image: url(../images/bipbupblack.png);
-    background-size: fill;
+    background-size: cover;
     opacity: 100%;
     font-family: "Geologica", serif;
     font-weight: bold;

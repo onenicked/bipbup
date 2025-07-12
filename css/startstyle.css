@@ -1,6 +1,6 @@
 body {
     background-image: url(../images/bipbupblack.png);
-    background-size: fill;
+    background-size: cover;
     opacity: 100%;
     font-family: "Geologica", serif;
     font-weight: bold;
@@ -19,14 +19,18 @@ body {
 
 .bigbip h1 {
     font-size: 100px;
-    margin: 400px 0px 0px;
+    margin: 350px 0px 0px;
     line-height: 1;
     color: white;
     position: center;
     display: inline-block;
 }
 
-.bigbip a {
+.adv {
+    text-decoration: none;
+}
+
+.home {
     display: inline-block;
     text-decoration: none;
     padding: 15px 150px;
@@ -38,7 +42,7 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.bigbip a:hover {
+.home:hover {
     background-color: #00000077;
     color: white;
 }
