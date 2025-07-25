@@ -1,0 +1,34 @@
+body {
+    background-image: url(../images/bipbupblack.png);
+    background-size: cover;
+    opacity: 100%;
+    font-family: "Geologica", serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.pam {
+    max-width: 800px;
+    padding: 390px;
+}
+
+.pam p {
+    font-size: 18px;
+    margin: center;
+    color: #ffffff;
+}
+
+.pam a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    background-color: #52525215;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}

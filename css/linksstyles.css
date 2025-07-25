@@ -122,6 +122,27 @@ body {
     font-size: 18px;
 }
 
+.zakonka {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #ffffff1c;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 18px;
+}
+
+.pamyatki {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 35px;
+}
+
 @keyframes float {
     0% {
         transform: translateY(0);
