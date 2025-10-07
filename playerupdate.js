@@ -1,7 +1,7 @@
- const VK_ACCESS_TOKEN = "0cd516030cd516030cd516031f0fee5e8100cd50cd5160364303a495f16f42a8bb5d240";
-    const VK_OWNER_ID = "-209507445";
+const VK_ACCESS_TOKEN = "0cd516030cd516030cd516031f0fee5e8100cd50cd5160364303a495f16f42a8bb5d240";
+const VK_OWNER_ID = "-209507445";
 
-    async function loadLatestVKVideo() {
+async function loadLatestVKVideo() {
         try {
             const res = await fetch(`https://api.vk.com/method/video.get?owner_id=${VK_OWNER_ID}&count=1&access_token=${VK_ACCESS_TOKEN}&v=5.199`);
             const data = await res.json();
@@ -16,11 +16,9 @@
 
             const videoId = `${video.owner_id}_${video.id}`;
 
-            // Очищаем контейнер перед вставкой нового видео
             const container = document.getElementById("vkVideoPlayer");
             container.innerHTML = "";
 
-            // Инициализация виджета VK
             VK.Widgets.Video("vkVideoPlayer", {
                 width: 800,
                 height: 500,
@@ -32,8 +30,6 @@
         }
     }
 
-    // Первичная загрузка
-    loadLatestVKVideo();
+loadLatestVKVideo();
 
-    // Автообновление каждые 10 минут (600000 мс)
-    setInterval(loadLatestVKVideo, 600000);
+setInterval(loadLatestVKVideo, 600000);
