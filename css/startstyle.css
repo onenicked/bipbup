@@ -2,7 +2,7 @@ body {
     background-image: url(../images/bipbupblack.png);
     background-size: cover;
     opacity: 100%;
-    font-family: "Geologica", serif;
+    font-family: "Unbounded", serif;
     font-weight: bold;
     margin: 0;
     padding: 0;
@@ -11,6 +11,53 @@ body {
     align-items: center;
     text-align: center;
 }
+
+#toggleSnow {
+      position: fixed;
+      font-family: Unbounded;
+      font-weight: bold;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      color: white;
+      transition: transform 0.3s;
+    }
+
+    #toggleSnow:hover {
+      transform: scale(1);
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0;
+      animation: fall linear infinite, fadeIn 1.5s forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+      }
+    }
 
 .bigbip {
     max-width: 600px;
@@ -35,7 +82,7 @@ body {
     text-decoration: none;
     padding: 15px 150px;
     margin-top: 10px;
-    background-color: #6d6d6d27;
+    background-color: #6d6d6d3d;
     color: #ffffff;
     border-radius: 35px;
     font-size: 18px;
