@@ -1,0 +1,70 @@
+body {
+    background-image: url(../images/bipbupblack.png);
+    background-size: cover;
+    opacity: 100%;
+    font-family: "Geologica", serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.web404 {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.web404 h1 {
+    font-size: 125px;
+    margin: 150px 0px 0px;
+    line-height: 1;
+    color: white;
+    position: center;
+    display: inline-block;
+}
+
+.web404 h1 {
+    animation: float 3s infinite ease-in-out;
+}
+
+.duck {
+    font-size: 10px;
+    color: #00000027;
+}
+
+.text {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.home {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 150px;
+    margin-top: 10px;
+    background-color: #6d6d6d27;
+    color: #ffffff;
+    border-radius: 35px;
+    font-size: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.home:hover {
+    background-color: #00000077;
+    color: white;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
