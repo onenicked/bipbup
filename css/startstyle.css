@@ -12,53 +12,6 @@ body {
     text-align: center;
 }
 
-#toggleSnow {
-      position: fixed;
-      font-family: Unbounded;
-      font-weight: bold;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      color: white;
-      transition: transform 0.3s;
-    }
-
-    #toggleSnow:hover {
-      transform: scale(1);
-    }
-
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: white;
-      font-size: 1em;
-      user-select: none;
-      pointer-events: none;
-      opacity: 0;
-      animation: fall linear infinite, fadeIn 1.5s forwards;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
-
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-      }
-    }
-
 .bigbip {
     max-width: 600px;
     padding: 20px;
