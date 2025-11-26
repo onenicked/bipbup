@@ -6,7 +6,7 @@
     'use strict';
 
     // === CONFIGURATION ===
-    const GROUP_ID = -730879227; // Change to your VK group ID (with minus if it's a group)
+    const GROUP_ID = -209507445; // Change to your VK group ID (with minus if it's a group)
     const VK_IFRAME_SELECTOR = 'iframe[src*="vkvideo.ru"], iframe[src*="vk.com/video_ext"]';
     const CACHE_KEY = 'latest_vk_video_data';
     const CACHE_TIMESTAMP_KEY = 'latest_vk_video_timestamp';
