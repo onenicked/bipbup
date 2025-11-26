@@ -36,7 +36,7 @@
 
         try {
             const rss = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
-            const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rss);
+            const proxy = 'https://corsproxy.io/?' + encodeURIComponent(rss);
             const text = await (await fetch(proxy)).text();
             const match = text.match(/youtube\.com\/v\/([a-zA-Z0-9_-]{11})/);
 
