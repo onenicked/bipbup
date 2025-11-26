@@ -12,43 +12,52 @@ body {
     text-align: center;
 }
 
-.web404 {
-    max-width: 600px;
-    padding: 20px;
+.login-container {
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    border-radius: 35px;
+    padding: 15px 10px;
+    margin-top: 200px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 300px;
 }
 
-.web404 h1 {
-    font-size: 125px;
-    margin: 150px 0px 0px;
-    line-height: 1;
-    color: white;
-    position: center;
-    display: inline-block;
+.textform {
+    font-size: 15px;
+    color: #fff;
 }
 
-.web404 h1 {
-    animation: float 3s infinite ease-in-out;
+.textformerror {
+    font-size: 15px;
+    color: #ff0000;
 }
 
-.duck {
-    font-size: 10px;
-    color: #00000027;
+.login-container h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #fff;
 }
 
-.text {
-    font-size: 20px;
-    color: #ffffff;
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 90%;
+    padding: 5px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
 }
 
-.backliquid {
+.login-container button {
     display: inline-block;
     background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
     color: white;
-    padding: 15px 20px;
+    padding: 15px 10px;
     margin-top: 10px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 15px;
     text-decoration: none;
     border-radius: 50px;
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
@@ -61,20 +70,20 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.backliquid:hover {
+.login-container button:hover {
     transform: translateY(-4px);
     box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
     background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
-@keyframes float {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
+.login-container a {
+    display: block;
+    margin-top: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-container a:hover {
+    color: #ffffff;
 }

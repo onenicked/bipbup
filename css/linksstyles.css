@@ -28,10 +28,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.vk:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .tg {
@@ -39,10 +53,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tg:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .yt {
@@ -50,10 +78,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.yt:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .chattg {
@@ -61,10 +103,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.chattg:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .da {
@@ -72,10 +128,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.da:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .ds {
@@ -83,10 +153,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.ds:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .twitch {
@@ -94,10 +178,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.twitch:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .player {
@@ -105,10 +203,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.player:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .zakonka {
@@ -116,10 +228,24 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
     font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.zakonka:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 .pamyatki {
@@ -127,23 +253,49 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     margin-top: 10px;
-    background-color: #6d6d6d3d;
-    color: #00ffaa;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
     border-radius: 35px;
+    font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-@keyframes float {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
+.pamyatki:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
-.links h1 {
-    animation: float 3s infinite ease-in-out;
+.backliquid {
+    display: inline-block;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
+    padding: 15px 20px;
+    margin-top: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.backliquid:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }

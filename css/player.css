@@ -31,3 +31,30 @@ body {
     margin: center;
     color: #ffffff;
 }
+
+.backliquid {
+    display: inline-block;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
+    padding: 15px 20px;
+    margin-top: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.backliquid:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+}

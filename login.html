@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логин панель</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <button onclick="window.location.href='start.html';">На главную
+        </button>
+        <h1>Авторизация</h1>
+        <form id="loginForm">
+            <label class="textform" for="username">Имя пользователя</label>
+            <input type="text" id="username" name="username" required>
+            <label class="textform" for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Войти</button>
+            <button onclick="register()">Зарегистрироваться</button>
+            <a href="passwordreset.html">Забыли пароль?</a>
+        </form>
+        <p class="textformerror" id="error-message" class="error-message"></p>
+    </div>
+    <script src="js/login.js"></script>
+</body>
+</html>

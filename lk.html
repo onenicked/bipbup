@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/lk.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 class="welcome"">Добро пожаловать, <span id="username"></span>!</h1>
+    <main>
+        <section class="actions-section">
+            <button onclick="editProfile()">Редактировать профиль</button>
+        </section>
+    </main>
+    <main>
+        <section class="actions-section">
+            <button onclick="logout()">Выйти</button>
+        </section>
+    </main>
+    <br>
+    <br>    
+    <footer>
+        <div>
+            <a class="paper" href="https://policies.google.com/privacy?hl=ru">Политика конфиденциальности</a>
+            <br>
+            <a class="paper" href="https://policies.google.com/terms?hl=ru">Условия использования</a>
+        </div>
+    </footer>
+    <br>
+    <br>
+    <a class="home" href="start.html">Вернутся на главную</a>
+    <script src="js/lk.js"></script>
+</body>
+</html>
