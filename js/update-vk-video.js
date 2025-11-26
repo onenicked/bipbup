@@ -1,139 +1,107 @@
-// ==UserScript==
-// Update VK Video iframe to the latest video from a group (max once every 2 days)
-// ==/UserScript==
+// js/update-vk-video.js
+// Автоматически обновляет VK-видео на странице до самого нового из группы bipbupyoutube
+// Работает прямо на твоём сайте, без Tampermonkey, без токенов
 
-(function () {
+(() => {
     'use strict';
 
-    // === CONFIGURATION ===
-    const GROUP_ID = -209507445; // Change to your VK group ID (with minus if it's a group)
-    const VK_IFRAME_SELECTOR = 'iframe[src*="vkvideo.ru"], iframe[src*="vk.com/video_ext"]';
-    const CACHE_KEY = 'latest_vk_video_data';
-    const CACHE_TIMESTAMP_KEY = 'latest_vk_video_timestamp';
-    const UPDATE_INTERVAL_HOURS = 48; // 2 days = 48 hours
+    const GROUP_URL = 'https://vk.com/bipbupyoutube';
+    const CACHE_KEY = 'bipbup_latest_vk_video';
+    const CACHE_TIME_KEY = 'bipbup_last_update_time';
+    const UPDATE_INTERVAL_HOURS = 48; // обновлять не чаще раза в 2 дня
 
-    // VK API endpoint
-    const API_URL = 'https://api.vk.com/method/wall.get';
-    const API_VERSION = '5.199';
+    // Находим именно второй iframe (VK Video) — он идёт после h1 с текстом "VK Video"
+    const vkIframe = document.querySelector('h1:nth-of-type(2) ~ iframe');
 
-    // Find the VK iframe
-    const vkIframe = document.querySelector(VK_IFRAME_SELECTOR);
     if (!vkIframe) {
-        console.warn('VK Video iframe not found on this page.');
+        console.warn('VK iframe не найден на странице');
         return;
     }
 
-    // Check if we have cached data and if it's still fresh
-    function isCacheValid() {
-        const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+    // Проверка кэша
+    function isCacheFresh() {
+        const timestamp = localStorage.getItem(CACHE_TIME_KEY);
         if (!timestamp) return false;
-
-        const lastUpdate = parseInt(timestamp, 10);
-        const now = Date.now();
-        const hoursPassed = (now - lastUpdate) / (1000 * 60 * 60);
-
+        const hoursPassed = (Date.now() - parseInt(timestamp, 10)) / (1000 * 60 * 60);
         return hoursPassed < UPDATE_INTERVAL_HOURS;
     }
 
-    // Save video data to cache
-    function cacheVideoData(ownerId, videoId) {
-        const data = { ownerId, videoId };
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
-        console.log('VK video cached:', data, 'Next update in 48 hours.');
+    function saveToCache(ownerId, videoId) {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ ownerId, videoId }));
+        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+        console.log('VK видео закэшировано:', `${ownerId}_${videoId}`);
     }
 
-    // Load cached video data
-    function getCachedVideoData() {
+    function getFromCache() {
         try {
             const data = localStorage.getItem(CACHE_KEY);
             return data ? JSON.parse(data) : null;
-        } catch (e) {
-            console.error('Failed to parse cached VK video data', e);
+        } catch {
             return null;
         }
     }
 
-    // Update iframe src
-    function updateIframe(ownerId, videoId) {
-        const newSrc = `https://vkvideo.ru/video_ext.php?oid=${ownerId}&id=${videoId}`;
-        if (vkIframe.src !== newSrc) {
+    function updateVkIframe(ownerId, videoId) {
+        const newSrc = `https://vk.com/video${ownerId}_${videoId}`;
+        if (vkIframe.src !== newSrc && vkIframe.src !== newSrc + '/') {
             vkIframe.src = newSrc;
-            console.log('VK video updated to:', newSrc);
+            console.log('VK видео обновлено →', newSrc);
         }
     }
 
-    // Fetch latest video from VK group
     async function fetchLatestVideo() {
         try {
-            const params = new URLSearchParams({
-                owner_id: GROUP_ID,
-                count: 10,              // Get last 10 posts to be safe
-                filter: 'owner',        // Only posts from the group
-                extended: 0,
-                v: API_VERSION,
-                access_token: '',       // Works without token for public groups
-            });
+            console.log('Ищем новое видео в группе bipbupyoutube...');
+            const res = await fetch(GROUP_URL, { cache: 'no-cache' });
+            if (!res.ok) throw new Error('Network error');
 
-            const response = await fetch(API_URL + '?' + params, {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'omit'
-            });
+            const text = await res.text();
 
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            let ownerId = null;
+            let videoId = null;
 
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.error_msg || 'VK API Error');
+            // 1. Самый надёжный способ 2025 года
+            const jsonMatches = [...text.matchAll(/"video":"(-?\d+)_(\d+)"/g)];
+            if (jsonMatches.length > 0) {
+                ownerId = jsonMatches[0][1];
+                videoId = jsonMatches[0][2];
             }
 
-            const posts = data.response?.items || [];
-            for (const post of posts) {
-                if (post.attachments) {
-                    for (const att of post.attachments) {
-                        if (att.type === 'video' && att.video) {
-                            const video = att.video;
-                            const ownerId = video.owner_id;
-                            const videoId = video.id;
-
-                            // Update iframe and cache
-                            updateIframe(ownerId, videoId);
-                            cacheVideoData(ownerId, videoId);
-                            return;
-                        }
-                    }
-                }
+            // 2. data-video атрибут
+            if (!ownerId) {
+                const m = text.match(/data-video=["'](-?\d+)_(\d+)["']/);
+                if (m) { ownerId = m[1]; videoId = m[2]; }
             }
 
-            console.log('No video found in recent posts.');
+            // 3. VideoCard и другие классы
+            if (!ownerId) {
+                const m = text.match(/VideoCard[^>]*?(-?\d+_\d+)/);
+                if (m) [ownerId, videoId] = m[1].split('_');
+            }
+
+            // 4. Фолбэк
+            if (!ownerId) {
+                const m = text.match(/(-?\d{8,10}_\d{8,10})/);
+                if (m) [ownerId, videoId] = m[1].split('_');
+            }
+
+            if (ownerId && videoId) {
+                updateVkIframe(ownerId, videoId);
+                saveToCache(ownerId, videoId);
+            } else {
+                console.log('Новое видео не найдено — оставляем старое');
+            }
         } catch (err) {
-            console.error('Failed to fetch latest VK video:', err);
-            // Don't update cache on error — keep old one
+            console.error('Ошибка получения нового видео VK:', err);
         }
     }
 
-    // Main logic
-    function init() {
-        const cached = getCachedVideoData();
-
-        if (cached && isCacheValid()) {
-            // Use cached video
-            updateIframe(cached.ownerId, cached.videoId);
-            console.log('Using cached VK video (updated less than 48h ago)');
-        } else {
-            // Fetch new one
-            console.log('Fetching latest VK video... (will update cache)');
-            fetchLatestVideo();
-        }
-    }
-
-    // Run when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+    // Основная логика
+    const cached = getFromCache();
+    if (cached && isCacheFresh()) {
+        console.log('Используется закэшированное VK видео');
+        updateVkIframe(cached.ownerId, cached.videoId);
     } else {
-        init();
+        fetchLatestVideo();
     }
-
 })();
