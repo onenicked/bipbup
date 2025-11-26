@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const YOUTUBE_CHANNEL_ID = 'UCk8GzjMOrta8yxDcKfylf1A';
+    const YOUTUBE_CHANNEL_ID = 'UCjrmposCYp6sJsT2VybjH9A';
 
     const CACHE_KEY_YT = 'bipbup_latest_yt';
     const CACHE_TIME_KEY = 'bipbup_last_update';
