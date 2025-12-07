@@ -100,3 +100,36 @@ body {
 .bigbip h1 {
     animation: float 3s infinite ease-in-out;
 }
+
+#controls {
+            position: fixed;
+            top: 60px;
+            right: 10px;;
+            padding: 14px 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .snowflake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(90vh);
+            }
+        }
