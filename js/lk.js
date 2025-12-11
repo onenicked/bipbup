@@ -22,7 +22,8 @@ const modalTitle = document.getElementById("modal-title");
 const modalBody = document.getElementById("modal-body");
 
 const ADMINS = [
-    "HGomVSGIRhWiy2o6RkkWheuEraF2",
+    "ncVuGk6MDjMZv4hhRtIdM27w8iq2",
+    "stat8qyHflOz44oVUDPTGfMsetV2",
 ];
 
 let unsubscribePendingCount = null;
