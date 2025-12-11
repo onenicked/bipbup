@@ -1,48 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Памятки</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="css/pamyatki.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="pam">
-    <p>
-    Murrieta
-    <br>
-    <br>
-    <a class="pamlink" href="https://docs.google.com/spreadsheets/d/1TnrMGT0FwQPGL7XLK7iT-SMMB9ceRtIAWIYQUfYMOkA/edit?gid=0#gid=0">
-            <br>
-            <img class="tg" style="height: 295px;" src="images/murrietapam.png" alt="comm">
-            <br>
+    <div class="pam" id="pamyatki-container">
+        <p>Загрузка памяток...</p>
+    </div>
+
+    <br><br>
+    <a class="backliquid" href="links.html">
+        <img style="height: 50px;" src="images/back.png" alt="back">
     </a>
-    <br>
-    <br>
-    Sunrise
-    <br>
-    <br>
-    <a class="pamlink" href="https://imgur.com/a/l95dCas">
-            <br>
-            <img class="tg" style="height: 980px;" src="images/sunrisepam.jpeg" alt="comm">
-            <br>
-    </a>
-</p>
-<br>
-<a style="visibility: hidden" href="https://forms.gle/KBLks5GRG9JTHb4z8">
-    Отправить свою памятку
-</a>
-<br>
-<br>
-<br>
- <a class="backliquid" href="links.html">
-            <img style="height: 50px;" src="images/back.png" alt="back">
-        </a>
-</div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
+            authDomain: "bipbupweb.firebaseapp.com",
+            projectId: "bipbupweb",
+            storageBucket: "bipbupweb.firebasestorage.app",
+            messagingSenderId: "1059922568826",
+            appId: "1:1059922568826:web:5bbf46006f29d96a273dc3"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        db.collection("pamyatki")
+            .where("status", "==", "approved")
+            .orderBy("moderatedAt", "desc")
+            .onSnapshot(snap => {
+                const container = document.getElementById("pamyatki-container");
+                container.innerHTML = "";
+
+                if (snap.empty) {
+                    container.innerHTML = "<p style='text-align:center; color:#aaa;'>Пока нет одобренных памяток</p>";
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    container.innerHTML += `
+                        <p style="text-align:center;">
+                            <br><br>
+                            <strong style="font-size:24px;">${p.title}</strong>
+                            <br><br>
+                            <img class="tg" src="${p.imageUrl}" style="max-width:100%; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+                            <br><br><br>
+                        </p>
+                    `;
+                });
+            });
+    </script>
 </body>
 </html>

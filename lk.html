@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +7,61 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="css/lk.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (compat для старого синтаксиса) -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <h1 class="welcome"">Добро пожаловать, <span id="username"></span>!</h1>
-    <main>
-        <section class="actions-section">
-            <button onclick="editProfile()">Редактировать профиль</button>
-        </section>
-    </main>
-    <main>
-        <section class="actions-section">
-            <button onclick="logout()">Выйти</button>
-        </section>
-    </main>
-    <br>
-    <br>    
-    <footer>
-        <div>
-            <a class="paper" href="https://policies.google.com/privacy?hl=ru">Политика конфиденциальности</a>
-            <br>
-            <a class="paper" href="https://policies.google.com/terms?hl=ru">Условия использования</a>
+    <br><br>
+    <div class="profile-card">
+        <div class="tg" id="avatar-container">
+            <div class="avatar-placeholder" id="avatar-placeholder">А</div>
+            <img class="avatar" id="avatar-img" style="display:none;">
         </div>
+        <h1 class="paper">Привет, <span id="username">загрузка...</span>!</h1>
+        <p class="paper" id="user-email"></p>
+
+        <button onclick="openModal('nickname')">Изменить никнейм</button><br>
+        <button onclick="document.getElementById('photo-input').click()">Изменить аватарку</button><br>
+        <button onclick="openModal('email')">Сменить email</button><br>
+        <button onclick="openModal('password')">Сменить пароль</button><br><br>
+
+        <!-- НОВАЯ КНОПКА — ДОБАВИТЬ ПАМЯТКУ -->
+        <button onclick="openAddPamyatkaModal()" style="background:#9b59b6;">Добавить свою памятку</button><br><br>
+
+        <button onclick="logout()" style="background:#e74c3c;">Выйти из аккаунта</button>
+    </div>
+
+    <!-- Кнопка модерации — только для админов -->
+    <div id="admin-pamyatki-btn" style="display:none; margin-top:20px;">
+        <button onclick="openModerationModal()" style="background:#f39c12; width:100%; padding:15px; font-size:16px;">
+            Памятки на модерации (<span id="pending-count">0</span>)
+        </button>
+    </div>
+
+    <input type="file" id="photo-input" accept="image/*" style="display:none;">
+
+    <!-- Универсальное модальное окно -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 class="paper" id="modal-title"></h3>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <br>
+    <a class="home" href="start.html">Вернуться на главную</a>
+
+    <footer style="text-align:center; margin-top:50px; color:#777;">
+        <a class="paper" href="https://policies.google.com/privacy?hl=ru">Политика конфиденциальности</a><br>
+        <a class="paper" href="https://policies.google.com/terms?hl=ru">Условия использования</a>
     </footer>
-    <br>
-    <br>
-    <a class="home" href="start.html">Вернутся на главную</a>
+
     <script src="js/lk.js"></script>
 </body>
 </html>

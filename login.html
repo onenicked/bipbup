@@ -10,22 +10,48 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div class="login-container">
-        <button onclick="window.location.href='start.html';">На главную
-        </button>
-        <h1>Авторизация</h1>
+
+    <!-- Вкладки: Вход / Регистрация -->
+    <div class="tab">
+        <button onclick="showLogin()">Вход</button>
+        <button onclick="showRegister()">Регистрация</button>
+        <button onclick="showReset()">Забыли пароль?</button>
+    </div>
+
+    <!-- Форма ВХОДА (такая же, как у тебя была) -->
+    <div id="loginBlock">
+        <h2>Вход в аккаунт</h2>
         <form id="loginForm">
-            <label class="textform" for="username">Имя пользователя</label>
-            <input type="text" id="username" name="username" required>
-            <label class="textform" for="password">Пароль</label>
-            <input type="password" id="password" name="password" required>
+            <input type="text" id="username" placeholder="Логин (или email)" required><br>
+            <input type="password" id="password" placeholder="Пароль" required><br>
             <button type="submit">Войти</button>
-            <button onclick="register()">Зарегистрироваться</button>
-            <a href="passwordreset.html">Забыли пароль?</a>
         </form>
-        <p class="textformerror" id="error-message" class="error-message"></p>
+        <div id="error-message"></div></div>
+    </div>
+
+    <!-- Форма РЕГИСТРАЦИИ -->
+    <div id="registerBlock" style="display: none;">
+        <h2>Регистрация</h2>
+        <form id="registerForm">
+            <input type="text" id="reg-username" placeholder="Придумайте логин" required><br>
+            <input type="email" id="reg-email" placeholder="Email" required><br>
+            <input type="password" id="reg-password" placeholder="Пароль (минимум 6 символов)" required><br>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+
+    <!-- Форма СБРОСА ПАРОЛЯ -->
+    <div id="resetBlock" style="display: none;">
+        <h2>Восстановление пароля</h2>
+        <form id="resetForm">
+            <input type="email" id="reset-email" placeholder="Введите ваш email" required><br>
+            <button type="submit">Отправить ссылку</button>
+        </form>
+        <p id="reset-message"></p>
     </div>
     <script src="js/login.js"></script>
 </body>

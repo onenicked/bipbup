@@ -13,6 +13,53 @@ body {
     text-align: center;
 }
 
+#avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.tg {
+    display: inline-block;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    color: white;
+    border-radius: 35px;
+    font-size: 18px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    display: flexbox;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tg:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+}
+
+#avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    background: #6c5ce7;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .welcome {
     padding: 20px;
     color: #ffffff;
@@ -78,4 +125,228 @@ button:hover {
     text-decoration: none;
     margin: center;
     color: #ffffff;
+}
+
+/* ====================== МОДАЛЬНОЕ ОКНО ====================== */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* ====================== КРАСИВЫЙ КОНТЕНТ В МОДАЛКЕ ====================== */
+
+#modal-body {
+    font-size: 17px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Стили для всех инпутов и текстэрий внутри модалки */
+#modal-body input,
+#modal-body textarea,
+#modal-body select {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 12px 0;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.35s ease;
+    box-sizing: border-box;
+}
+
+#modal-body input:focus,
+#modal-body textarea:focus,
+#modal-body select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* === САМЫЕ КРАСИВЫЕ ПЛЕЙСХОЛДЕРЫ === */
+#modal-body input::placeholder,
+#modal-body textarea::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Unbounded', sans-serif;
+}
+
+/* Эффект при фокусе — плейсхолдер красиво улетает вверх и становится меньше */
+#modal-body input:focus::placeholder,
+#modal-body textarea:focus::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+    transform: translateY(-14px);
+    font-weight: 600;
+}
+
+/* Для textarea чуть больше отступ */
+#modal-body textarea {
+    min-height: 120px;
+    resize: vertical;
+    border-radius: 22px;
+}
+
+/* Чекбоксы и радио в твоём стиле */
+#modal-body input[type="checkbox"],
+#modal-body input[type="radio"] {
+    width: auto;
+    accent-color: #ffffff44;
+    transform: scale(1.4);
+    margin-right: 12px;
+}
+
+/* Кнопки внутри модалки (если будут) */
+#modal-body button,
+#modal-body .btn {
+    margin-top: 20px;
+    padding: 16px 32px;
+    font-size: 17px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* Подписи к инпутам (label) */
+#modal-body label {
+    display: block;
+    margin: 18px 0 8px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    text-align: left;
+}
+
+/* Маленькие подсказки */
+#modal-body small {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+}
+
+.modal-content {
+    position: relative;
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.65), rgba(20, 20, 20, 0.75));
+    margin: 8% auto;
+    padding: 40px 30px;
+    border-radius: 28px;
+    max-width: 520px;
+    width: 90%;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 02px 15px rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    animation: modalPop 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    color: white;
+}
+
+.modal-content h3.paper {
+    font-size: 26px;
+    margin: 0 0 24px 0;
+    text-align: center;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Кнопка закрытия — стильная и в твоём духе */
+.modal .close {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal .close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Контент внутри модалки */
+#modal-body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.92);
+    margin-top: 10px;
+}
+
+/* А adattив под мобильные */
+@media (max-width: 600px) {
+    .modal-content {
+        margin: 15% auto;
+        padding: 35px 20px;
+        border-radius: 22px;
+    }
+    
+    .modal-content h3.paper {
+        font-size: 23px;
+    }
+    
+    .modal .close {
+        top: 14px;
+        right: 18px;
+        font-size: 34px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalPop {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
