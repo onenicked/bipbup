@@ -8,8 +8,6 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="css/lk.css">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-
-    <!-- Firebase SDK (compat для старого синтаксиса) -->
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
@@ -24,28 +22,28 @@
         </div>
         <h1 class="paper">Привет, <span id="username">загрузка...</span>!</h1>
         <p class="paper" id="user-email"></p>
-
-        <button onclick="openModal('nickname')">Изменить никнейм</button><br>
-        <button onclick="document.getElementById('photo-input').click()">Изменить аватарку</button><br>
-        <button onclick="openModal('email')">Сменить email</button><br>
-        <button onclick="openModal('password')">Сменить пароль</button><br><br>
-
-        <!-- НОВАЯ КНОПКА — ДОБАВИТЬ ПАМЯТКУ -->
-        <button onclick="openAddPamyatkaModal()" style="background:#9b59b6;">Добавить свою памятку</button><br><br>
-
-        <button onclick="logout()" style="background:#e74c3c;">Выйти из аккаунта</button>
+        <button onclick="openAddPamyatkaModal()">Добавить свою памятку</button>
+        <br>
+        <br>
+        <button onclick="openAvatarModal()">Изменить аватарку</button>
+        <br>
+        <button onclick="openModal('email')">Сменить email</button>
+        <br>
+        <button onclick="openModal('password')">Сменить пароль</button>
+        <br>
+        <button onclick="openModal('nickname')">Изменить никнейм</button>
+        <br>
+        <button onclick="logout()"">Выйти из аккаунта</button>
     </div>
 
-    <!-- Кнопка модерации — только для админов -->
     <div id="admin-pamyatki-btn" style="display:none; margin-top:20px;">
-        <button onclick="openModerationModal()" style="background:#f39c12; width:100%; padding:15px; font-size:16px;">
+        <button onclick="openModerationModal()" style="background: #ff0000; width:40%; padding:15px; font-size:16px;">
             Памятки на модерации (<span id="pending-count">0</span>)
         </button>
     </div>
 
     <input type="file" id="photo-input" accept="image/*" style="display:none;">
 
-    <!-- Универсальное модальное окно -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -53,13 +51,15 @@
             <div id="modal-body"></div>
         </div>
     </div>
-
     <br>
-    <a class="home" href="start.html">Вернуться на главную</a>
+    <a class="home" href="start.html">Вернуться</a>
 
-    <footer style="text-align:center; margin-top:50px; color:#777;">
-        <a class="paper" href="https://policies.google.com/privacy?hl=ru">Политика конфиденциальности</a><br>
+    <footer style="text-align:center; margin-top:50px;">
+        <a class="paper" href="https://policies.google.com/privacy?hl=ru">Политика конфиденциальности</a>
+        <br>
         <a class="paper" href="https://policies.google.com/terms?hl=ru">Условия использования</a>
+        <br>
+        <a class="paperbug" href="https://t.me/bipbupmanager">Я нашёл баг!</a>
     </footer>
 
     <script src="js/lk.js"></script>

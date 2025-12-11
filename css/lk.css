@@ -30,7 +30,7 @@ body {
     background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
     color: white;
     border-radius: 35px;
-    font-size: 18px;
+    font-size: 16px;
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
     transition: all 0.3s ease;
     z-index: 9999;
@@ -50,9 +50,9 @@ body {
 #avatar-placeholder {
     width: 100px;
     height: 100px;
-    background: #6c5ce7;
+    background: #000000;
     color: white;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     border-radius: 50%;
     display: flex;
@@ -74,7 +74,7 @@ body {
     margin-top: 10px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: none;
     border-radius: 50px;
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
@@ -101,7 +101,7 @@ button {
     margin-top: 10px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: none;
     border-radius: 50px;
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
@@ -121,13 +121,19 @@ button:hover {
 }
 
 .paper {
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: none;
     margin: center;
     color: #ffffff;
 }
 
-/* ====================== МОДАЛЬНОЕ ОКНО ====================== */
+.paperbug {
+    font-size: 16px;
+    text-decoration: none;
+    margin: center;
+    color: #ff0000;
+}
+
 .modal {
     display: none; 
     position: fixed;
@@ -143,15 +149,12 @@ button:hover {
     animation: fadeIn 0.4s ease-out;
 }
 
-/* ====================== КРАСИВЫЙ КОНТЕНТ В МОДАЛКЕ ====================== */
-
 #modal-body {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.95);
 }
 
-/* Стили для всех инпутов и текстэрий внутри модалки */
 #modal-body input,
 #modal-body textarea,
 #modal-body select {
@@ -183,7 +186,6 @@ button:hover {
     transform: translateY(-2px);
 }
 
-/* === САМЫЕ КРАСИВЫЕ ПЛЕЙСХОЛДЕРЫ === */
 #modal-body input::placeholder,
 #modal-body textarea::placeholder {
     color: rgba(255, 255, 255, 0.55);
@@ -192,7 +194,6 @@ button:hover {
     font-family: 'Unbounded', sans-serif;
 }
 
-/* Эффект при фокусе — плейсхолдер красиво улетает вверх и становится меньше */
 #modal-body input:focus::placeholder,
 #modal-body textarea:focus::placeholder {
     color: rgba(255, 255, 255, 0.8);
@@ -201,14 +202,12 @@ button:hover {
     font-weight: 600;
 }
 
-/* Для textarea чуть больше отступ */
 #modal-body textarea {
     min-height: 120px;
     resize: vertical;
     border-radius: 22px;
 }
 
-/* Чекбоксы и радио в твоём стиле */
 #modal-body input[type="checkbox"],
 #modal-body input[type="radio"] {
     width: auto;
@@ -217,17 +216,15 @@ button:hover {
     margin-right: 12px;
 }
 
-/* Кнопки внутри модалки (если будут) */
 #modal-body button,
 #modal-body .btn {
     margin-top: 20px;
     padding: 16px 32px;
-    font-size: 17px;
+    font-size: 16px;
     border-radius: 50px;
     cursor: pointer;
 }
 
-/* Подписи к инпутам (label) */
 #modal-body label {
     display: block;
     margin: 18px 0 8px;
@@ -237,7 +234,6 @@ button:hover {
     text-align: left;
 }
 
-/* Маленькие подсказки */
 #modal-body small {
     display: block;
     margin-top: 6px;
@@ -276,7 +272,6 @@ button:hover {
     background-clip: text;
 }
 
-/* Кнопка закрытия — стильная и в твоём духе */
 .modal .close {
     position: absolute;
     top: 18px;
@@ -305,7 +300,6 @@ button:hover {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
-/* Контент внутри модалки */
 #modal-body {
     font-size: 17px;
     line-height: 1.7;
@@ -313,7 +307,6 @@ button:hover {
     margin-top: 10px;
 }
 
-/* А adattив под мобильные */
 @media (max-width: 600px) {
     .modal-content {
         margin: 15% auto;
@@ -334,7 +327,6 @@ button:hover {
     }
 }
 
-/* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

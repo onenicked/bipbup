@@ -7,20 +7,16 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="css/pamyatki.css">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="pam" id="pamyatki-container">
-        <p>Загрузка памяток...</p>
+        <p style="text-align:center; color:#aaa; padding:50px;">Загрузка памяток...</p>
     </div>
-
-    <br><br>
     <a class="backliquid" href="links.html">
         <img style="height: 50px;" src="images/back.png" alt="back">
     </a>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
@@ -35,24 +31,26 @@
 
         db.collection("pamyatki")
             .where("status", "==", "approved")
-            .orderBy("moderatedAt", "desc")
+            .orderBy("createdAt", "desc")
             .onSnapshot(snap => {
                 const container = document.getElementById("pamyatki-container");
                 container.innerHTML = "";
 
                 if (snap.empty) {
-                    container.innerHTML = "<p style='text-align:center; color:#aaa;'>Пока нет одобренных памяток</p>";
+                    container.innerHTML = `<p style="text-align:center; color:#aaa; padding:100px 20px;">
+                        Пока нет одобренных памяток :( <br><br>
+                        Но ты можешь стать первым!
+                    </p>`;
                     return;
                 }
 
                 snap.forEach(doc => {
                     const p = doc.data();
                     container.innerHTML += `
-                        <p style="text-align:center;">
+                        <p style="text-align:center; margin:80px 0;">
+                            <strong style="font-size:28px; color:#fff;">${p.title}</strong>
                             <br><br>
-                            <strong style="font-size:24px;">${p.title}</strong>
-                            <br><br>
-                            <img class="tg" src="${p.imageUrl}" style="max-width:100%; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+                            <img class="tg" src="${p.imageUrl}" style="max-width:100%; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.6);">
                             <br><br><br>
                         </p>
                     `;

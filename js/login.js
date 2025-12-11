@@ -1,4 +1,3 @@
-// Твоя конфигурация Firebase (оставляем как есть)
 const firebaseConfig = {
     apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
     authDomain: "bipbupweb.firebaseapp.com",
@@ -12,7 +11,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// === Показать нужные блоки ===
 function showLogin() {
     document.getElementById("loginBlock").style.display = "block";
     document.getElementById("registerBlock").style.display = "none";
@@ -32,7 +30,6 @@ function showReset() {
     document.getElementById("resetBlock").style.display = "block";
 }
 
-// === ВХОД ===
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const login = document.getElementById("username").value.trim();
@@ -47,7 +44,6 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
 
     auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-            // Не перенаправляем вручную — ждём onAuthStateChanged
         })
         .catch((error) => {
             document.getElementById("error-message").textContent = 
@@ -57,7 +53,6 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         });
 });
 
-// === РЕГИСТРАЦИЯ ===
 document.getElementById("registerForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const username = document.getElementById("reg-username").value.trim();
@@ -75,14 +70,12 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
 
     auth.createUserWithEmailAndPassword(email, password)
         .then((cred) => {
-            // Сразу обновляем профиль (логин)
             return cred.user.updateProfile({
                 displayName: username
             });
         })
         .then(() => {
             console.log("Регистрация успешна, пользователь авторизован");
-            // Ничего не делаем — onAuthStateChanged сам перенаправит
         })
         .catch((error) => {
             if (error.code === "auth/email-already-in-use") {
@@ -95,7 +88,6 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
         });
 });
 
-// === СБРОС ПАРОЛЯ ===
 document.getElementById("resetForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const email = document.getElementById("reset-email").value.trim();
@@ -111,28 +103,22 @@ document.getElementById("resetForm").addEventListener("submit", function(e) {
         });
 });
 
-// ГЛАВНЫЙ ФИКС: умный обработчик авторизации
 auth.onAuthStateChanged((user) => {
     const isLoginPage = window.location.pathname.includes("login.html") || 
                         window.location.pathname === "/" || 
                         window.location.pathname.endsWith("/");
 
     if (user) {
-        // Пользователь авторизован
         console.log("Пользователь авторизован:", user.displayName || user.email);
 
         if (isLoginPage) {
-            // Только если мы на странице входа — перенаправляем в ЛК
             window.location.href = "lk.html";
         }
     } else {
-        // Пользователь НЕ авторизован
         if (!isLoginPage) {
-            // Если мы НЕ на странице логина — кидаем туда
             window.location.href = "login.html";
         }
     }
 });
 
-// По умолчанию — показываем вход
 showLogin();

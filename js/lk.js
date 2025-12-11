@@ -1,4 +1,3 @@
-// Твоя конфигурация Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
     authDomain: "bipbupweb.firebaseapp.com",
@@ -11,7 +10,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const storage = firebase.storage();
-const db = firebase.firestore(); // ← добавили Firestore
+const db = firebase.firestore();
 
 const avatarImg = document.getElementById("avatar-img");
 const avatarPlaceholder = document.getElementById("avatar-placeholder");
@@ -22,12 +21,12 @@ const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modal-title");
 const modalBody = document.getElementById("modal-body");
 
-// ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
-// СПИСОК АДМИНОВ — ЗАМЕНИ НА СВОИ UID (можно посмотреть в Firebase Console → Authentication)
 const ADMINS = [
-    "HGomVSGIRhWiy2o6RkkWheuEraF2"
+    "HGomVSGIRhWiy2o6RkkWheuEraF2",
 ];
-// ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
+
+let unsubscribePendingCount = null;
+let unsubscribeModeration = null;
 
 auth.onAuthStateChanged(async (user) => {
     if (!user) {
@@ -51,123 +50,152 @@ auth.onAuthStateChanged(async (user) => {
         avatarPlaceholder.style.display = "flex";
     }
 
-    // Показываем кнопку модерации только админам
     if (ADMINS.includes(user.uid)) {
         document.getElementById("admin-pamyatki-btn").style.display = "block";
-        updatePendingCount();
+        setupPendingCountListener();
     }
 });
 
-// === ЗАГРУЗКА АВАТАРКИ ===
+function setupPendingCountListener() {
+    if (unsubscribePendingCount) unsubscribePendingCount();
+    unsubscribePendingCount = db.collection("pamyatki")
+        .where("status", "==", "pending")
+        .onSnapshot(snap => {
+            console.log("Realtime count update:", snap.size);
+            document.getElementById("pending-count").textContent = snap.size;
+        }, err => {
+            console.error("Count listener error:", err);
+        });
+}
+
 photoInput.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const user = auth.currentUser;
-    if (!user) return alert("Ошибка авторизации");
-
-    photoInput.value = "";
-
-    try {
-        const uniqueName = `avatars/${user.uid}_${Date.now()}.jpg`;
-        const storageRef = firebase.storage().ref(uniqueName);
-        const snapshot = await storageRef.put(file);
-        const downloadURL = await snapshot.ref.getDownloadURL();
-
-        await user.updateProfile({ photoURL: downloadURL });
-
-        avatarImg.src = downloadURL + "?t=" + Date.now();
-        avatarImg.style.display = "block";
-        avatarPlaceholder.style.display = "none";
-
-        alert("Аватарка обновлена!");
-        location.reload();
-    } catch (error) {
-        console.error(error);
-        alert("Ошибка: " + error.message);
-    }
 });
 
-// === ДОБАВЛЕНИЕ ПАМЯТКИ ===
 function openAddPamyatkaModal() {
     modal.style.display = "flex";
     modalTitle.textContent = "Добавить свою памятку";
     modalBody.innerHTML = `
-        <input type="text" id="pamyatka-title" placeholder="Название локации (например: Murrieta)" style="width:100%; padding:10px; margin:8px 0;">
-        <input type="file" id="pamyatka-file" accept="image/*" style="width:100%; padding:10px; margin:8px 0;">
-        <button onclick="submitPamyatka()" style="background:#9b59b6; padding:12px 20px;">Отправить на модерацию</button>
+        <input type="text" id="pamyatka-title" placeholder="Название локации (например: Murrieta)" 
+               style="width:100%; padding:13px; margin:8px 0; border-radius:10px; border:1px solid #555; font-size:16px; background:#1e1e1e; color:white;">
+
+        <input type="url" id="pamyatka-url" placeholder="Прямая ссылка на памятку (фото)" 
+               style="width:100%; padding:13px; margin:8px 0; border-radius:10px; border:1px solid #555; font-size:16px; background:#1e1e1e; color:white;">
+
+        <div style="background:#2d2d2d; padding:15px; border-radius:12px; margin:12px 0; font-size:14px; line-height:1.6;">
+            <strong>Как получить прямую ссылку:</strong><br>
+            1. Открой <a href="https://imgbb.com" target="_blank" style="color:#9b59b6; font-weight:bold;">imgbb.com</a><br>
+            2. Перетащи или загрузи скриншот<br>
+            3. Перейди по полученной ссылку → Правой кнопкой мыши на изображение → Скопировать адрес изображения<br>
+            4. Вставь в нужное поле
+        </div>
+
+        <div id="image-preview" style="margin:20px 0; text-align:center; display:none;">
+            <p style="color:#aaa; margin-bottom:10px;">Превью:</p>
+            <img id="preview-img" src="" style="max-width:100%; max-height:500px; border-radius:14px; box-shadow:0 10px 40px rgba(0,0,0,0.7);">
+        </div>
+
+        <button id="submit-pamyatka-btn" style="background: #ff0000ff; color:white; padding:16px; width:100%; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;">
+            Отправить на модерацию
+        </button>
+        <br>
+        <br>
+        <br>
+        <br>
     `;
+
+    const urlInput = document.getElementById("pamyatka-url");
+    const preview = document.getElementById("image-preview");
+    const img = document.getElementById("preview-img");
+
+    urlInput.addEventListener("input", function() {
+        const url = this.value.trim();
+        if (url && (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp') || url.includes('ibb.co'))) {
+            img.src = url + "?t=" + Date.now();
+            preview.style.display = "block";
+        } else if (url === "") {
+            preview.style.display = "none";
+        }
+    });
+
+    document.getElementById("submit-pamyatka-btn").addEventListener("click", submitPamyatka);
 }
 
 async function submitPamyatka() {
     const user = auth.currentUser;
+    if (!user) return alert("Ошибка авторизации");
+
     const title = document.getElementById("pamyatka-title").value.trim();
-    const fileInput = document.getElementById("pamyatka-file");
-    const file = fileInput.files[0];
+    const imageUrl = document.getElementById("pamyatka-url").value.trim();
 
-    if (!title || !file) return alert("Заполните все поля!");
-
-    try {
-        const fileName = `pamyatki/pending_${user.uid}_${Date.now()}.jpg`;
-        const storageRef = firebase.storage().ref(fileName);
-        const snapshot = await storageRef.put(file);
-        const imageUrl = await snapshot.ref.getDownloadURL();
-
-        await db.collection("pamyatki").add({
-            uid: user.uid,
-            displayName: user.displayName || user.email.split('@')[0],
-            email: user.email,
-            title: title,
-            imageUrl: imageUrl,
-            status: "pending",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert("Памятка отправлена на модерацию! ❤️\nМы проверим и добавим её в ближайшее время.");
-        closeModal();
-    } catch (err) {
-        console.error(err);
-        alert("Ошибка: " + err.message);
+    if (!title) return alert("Введите название локации!");
+    if (!imageUrl) return alert("Вставьте прямую ссылку на картинку!");
+    if (!imageUrl.match(/\.(jpg|jpeg|png|webp)$/i) && !imageUrl.includes('ibb.co')) {
+        return alert("Ссылка должна вести прямо на картинку (заканчиваться на .jpg, .png и т.д.)\nИспользуй imgbb.com → Direct link");
     }
-}
 
-// === МОДЕРАЦИЯ (только для админов) ===
-async function updatePendingCount() {
-    const snap = await db.collection("pamyatki").where("status", "==", "pending").get();
-    document.getElementById("pending-count").textContent = snap.size;
+    const test = new Image();
+    test.onload = async () => {
+        try {
+            await db.collection("pamyatki").add({
+                uid: user.uid,
+                displayName: user.displayName || user.email.split('@')[0],
+                email: user.email,
+                title: title,
+                imageUrl: imageUrl,
+                status: "pending",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Памятка успешно отправлена на модерацию! Спасибо ❤️");
+            closeModal();
+        } catch (err) {
+            console.error(err);
+            alert("Ошибка сохранения: " + err.message);
+        }
+    };
+    test.onerror = () => {
+        alert("Картинка не загружается по этой ссылке.\nПроверь, что ты скопировал именно Direct link с imgbb.com");
+    };
+    test.src = imageUrl + "?t=" + Date.now();
 }
 
 async function openModerationModal() {
+    console.log("Opening moderation modal");
     modal.style.display = "flex";
     modalTitle.textContent = "Памятки на модерации";
+    modalBody.innerHTML = "<p>Загрузка...</p>";
 
-    const snapshot = await db.collection("pamyatki")
+    if (unsubscribeModeration) unsubscribeModeration();
+    unsubscribeModeration = db.collection("pamyatki")
         .where("status", "==", "pending")
         .orderBy("createdAt", "asc")
-        .get();
+        .onSnapshot(snapshot => {
+            console.log("Realtime moderation update:", snapshot.size);
+            if (snapshot.empty) {
+                modalBody.innerHTML = "<p style='text-align:center; color:#aaa;'>Нет памяток</p>";
+                return;
+            }
 
-    if (snapshot.empty) {
-        modalBody.innerHTML = "<p style='text-align:center; color:#aaa;'>Нет памяток на модерации</p>";
-        return;
-    }
-
-    let html = "";
-    snapshot.forEach(doc => {
-        const d = doc.data();
-        html += `
-            <div style="background:#1e1e1e; border:1px solid #444; border-radius:12px; padding:15px; margin:15px 0;">
-                <p><strong>${d.title}</strong><br>
-                   от ${d.displayName} (${d.email})<br>
-                   ${new Date(d.createdAt?.toDate()).toLocaleString('ru-RU')}</p>
-                <img src="${d.imageUrl}" style="max-width:100%; border-radius:8px; margin:10px 0;">
-                <div style="margin-top:10px;">
-                    <button onclick="approvePamyatka('${doc.id}')" style="background:#27ae60; padding:10px 15px;">Принять</button>
-                    <button onclick="rejectPamyatka('${doc.id}')" style="background:#c0392b; margin-left:10px; padding:10px 15px;">Отклонить</button>
-                </div>
-            </div>
-        `;
-    });
-    modalBody.innerHTML = html;
+            let html = "";
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                html += `
+                    <div style="background:#1e1e1e; border:1px solid #444; border-radius:12px; padding:15px; margin:15px 0;">
+                        <p><strong>${d.title}</strong><br>
+                           от ${d.displayName} (${d.email})<br>
+                           ${d.createdAt ? new Date(d.createdAt.toDate()).toLocaleString('ru-RU') : 'Неизвестно'}</p>
+                        <img src="${d.imageUrl}" style="max-width:100%; border-radius:8px; margin:10px 0;">
+                        <div style="margin-top:10px;">
+                            <button onclick="approvePamyatka('${doc.id}')" style="background:#27ae60; padding:10px 15px;">Принять</button>
+                            <button onclick="rejectPamyatka('${doc.id}')" style="background:#c0392b; margin-left:10px; padding:10px 15px;">Отклонить</button>
+                        </div>
+                    </div>
+                `;
+            });
+            modalBody.innerHTML = html;
+        }, err => {
+            console.error("Moderation listener error:", err);
+            modalBody.innerHTML = "<p style='color:red;'>Ошибка: " + err.message + "</p>";
+        });
 }
 
 async function approvePamyatka(docId) {
@@ -190,7 +218,6 @@ async function rejectPamyatka(docId) {
     openModerationModal();
 }
 
-// === Остальные модалки (ник, email, пароль) — без изменений ===
 function openModal(type) {
     modal.style.display = "flex";
     if (type === "nickname") {
@@ -260,6 +287,92 @@ function changePassword() {
     user.reauthenticateWithCredential(cred).then(() => user.updatePassword(np))
         .then(() => { closeModal(); alert("Пароль изменён!"); })
         .catch(e => alert(e.message));
+}
+
+async function uploadAvatarToImgbb(file) {
+    const apiKey = "fac7e04a7bdbc05013b7483b33eae743";
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+            method: "POST",
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            return data.data.url;
+        } else {
+            throw new Error("Ошибка загрузки на imgbb");
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+function openAvatarModal() {
+    modal.style.display = "flex";
+    modalTitle.textContent = "Изменить аватарку";
+    modalBody.innerHTML = `
+        <div style="text-align:center;">
+            <img id="current-avatar-preview" src="${auth.currentUser.photoURL || 'images/default-avatar.png'}" 
+                 style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid #9b59b6; margin-bottom:15px;">
+            <br>
+            <input type="file" id="new-avatar-input" accept="image/*" style="margin:15px 0;">
+            <div id="avatar-upload-preview" style="display:none; margin:15px 0;">
+                <p style="color:#aaa;">Превью:</p>
+                <img id="avatar-preview-img" src="" style="width:150px; height:150px; border-radius:50%; object-fit:cover; border:4px solid #27ae60;">
+            </div>
+            <button id="save-avatar-btn" style="background:#9b59b6; color:white; padding:14px 30px; border:none; border-radius:10px; font-size:16px; margin-top:10px;">
+                Сохранить аватарку
+            </button>
+        </div>
+    `;
+
+    const fileInput = document.getElementById("new-avatar-input");
+    const previewImg = document.getElementById("avatar-preview-img");
+    const previewBlock = document.getElementById("avatar-upload-preview");
+
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewBlock.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById("save-avatar-btn").addEventListener("click", async () => {
+        const file = fileInput.files[0];
+        if (!file) return alert("Выбери фото!");
+
+        document.getElementById("save-avatar-btn").textContent = "Загружается...";
+        document.getElementById("save-avatar-btn").disabled = true;
+
+        try {
+            const imageUrl = await uploadAvatarToImgbb(file);
+
+            await auth.currentUser.updateProfile({
+                photoURL: imageUrl
+            });
+
+            avatarImg.src = imageUrl + "?t=" + Date.now();
+            avatarImg.style.display = "block";
+            avatarPlaceholder.style.display = "none";
+
+            alert("Аватарка успешно обновлена! ❤️");
+            closeModal();
+        } catch (err) {
+            alert("Ошибка загрузки аватарки. Попробуй ещё раз.");
+        } finally {
+            document.getElementById("save-avatar-btn").textContent = "Сохранить аватарку";
+            document.getElementById("save-avatar-btn").disabled = false;
+        }
+    });
 }
 
 function logout() {

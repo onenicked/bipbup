@@ -14,39 +14,31 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-
-    <!-- Вкладки: Вход / Регистрация -->
     <div class="tab">
         <button onclick="showLogin()">Вход</button>
         <button onclick="showRegister()">Регистрация</button>
         <button onclick="showReset()">Забыли пароль?</button>
     </div>
-
-    <!-- Форма ВХОДА (такая же, как у тебя была) -->
-    <div id="loginBlock">
+    <div class="loginblock" id="loginBlock">
         <h2>Вход в аккаунт</h2>
         <form id="loginForm">
-            <input type="text" id="username" placeholder="Логин (или email)" required><br>
+            <input type="text" id="username" placeholder="Email" required><br>
             <input type="password" id="password" placeholder="Пароль" required><br>
             <button type="submit">Войти</button>
         </form>
         <div id="error-message"></div></div>
     </div>
-
-    <!-- Форма РЕГИСТРАЦИИ -->
-    <div id="registerBlock" style="display: none;">
+    <div class="loginblock" id="registerBlock" style="display: none;">
         <h2>Регистрация</h2>
         <form id="registerForm">
-            <input type="text" id="reg-username" placeholder="Придумайте логин" required><br>
+            <input type="text" id="reg-username" placeholder="Логин" required><br>
             <input type="email" id="reg-email" placeholder="Email" required><br>
-            <input type="password" id="reg-password" placeholder="Пароль (минимум 6 символов)" required><br>
+            <input type="password" id="reg-password" placeholder="Пароль от 6 символов" required><br>
             <button type="submit">Зарегистрироваться</button>
         </form>
     </div>
-
-    <!-- Форма СБРОСА ПАРОЛЯ -->
-    <div id="resetBlock" style="display: none;">
-        <h2>Восстановление пароля</h2>
+    <div class="loginblock" id="resetBlock" style="display: none;">
+        <h2 class="paper">Восстановление пароля</h2>
         <form id="resetForm">
             <input type="email" id="reset-email" placeholder="Введите ваш email" required><br>
             <button type="submit">Отправить ссылку</button>
