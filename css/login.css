@@ -2,8 +2,7 @@ body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-image: url(../images/bipbupblack.png);
-            background-size: cover;
+            background: -webkit-linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);background: linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);
             background-attachment: fixed;
             font-family: "Unbounded", serif;
             font-weight: bold;
@@ -16,6 +15,33 @@ body {
 
         .loginblock {
             margin-top: -350px;
+        }
+
+        .backliquid {
+        display: inline-block;
+        background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+        color: white;
+        padding: 15px 20px;
+        margin-top: 10px;
+        font-family: 'Unbounded', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        text-decoration: none;
+        border-radius: 50px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
+        transition: all 0.3s ease;
+        z-index: 9999;
+        display: flexbox;
+        align-items: center;
+        gap: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .backliquid:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
+        background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
         }
 
         h2.paper {

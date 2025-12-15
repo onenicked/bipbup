@@ -1,6 +1,5 @@
 body {
-    background-image: url(../images/bipbupblack.png);
-    background-size: cover;
+    background: -webkit-linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);background: linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);
     opacity: 100%;
     font-family: "Unbounded", serif;
     font-weight: bold;
