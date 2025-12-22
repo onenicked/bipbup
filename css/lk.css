@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    background: -webkit-linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);background: linear-gradient(90deg, #000000,#000a0a,#011f23,#000a0a,#000000);
+    background: radial-gradient(circle at center, #011f23 0%, #000a0a 50%, #000000 100%);
     opacity: 100%;
     font-family: "Unbounded", serif;
     font-weight: bold;
