@@ -1,6 +1,6 @@
 body {
     background: radial-gradient(circle at center, #011f23 0%, #000a0a 50%, #000000 100%);
-    min-height: 100vh; /* Гарантирует высоту на весь экран */
+    min-height: 100vh;
     font-family: "Unbounded", serif;
     font-weight: bold;
     margin: 0;

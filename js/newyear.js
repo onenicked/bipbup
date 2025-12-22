@@ -40,3 +40,4 @@ let snowActive = true;
         });
 
         startSnow();
+

@@ -1,15 +1,63 @@
+html {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
-    line-height: 1.6;
-    background: radial-gradient(circle at center, #011f23 0%, #000a0a 50%, #000000 100%);
-    opacity: 100%;
+    min-height: 100vh;
+    background-color: #000000;
     font-family: "Unbounded", serif;
     font-weight: bold;
-    display: flexbox;
-    justify-content: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    position: relative;
     text-align: center;
+    line-height: 1.6;
+}
+
+body::before, 
+body::after {
+    content: "";
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; 
+}
+
+body::before {
+    background: 
+        radial-gradient(circle at 20% 30%, #011f23 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #012b30 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #000a0a 0%, transparent 60%);
+    filter: blur(60px);
+    opacity: 0.8;
+    z-index: -2;
+    animation: auroraFlow 10s ease-in-out infinite alternate;
+}
+
+body::after {
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(1, 31, 35, 0.15) 0%, transparent 50%);
+    z-index: -3; 
+    animation: rotateNebula 25s linear infinite;
+}
+
+.welcome {
+    padding: 20px;
+    color: #ffffff;
+    position: relative;
+    z-index: 10;
 }
 
 #avatar-img {
@@ -19,31 +67,6 @@ body {
     object-fit: cover;
     border: 3px solid #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.tg {
-    display: inline-block;
-    text-decoration: none;
-    padding: 15px 20px;
-    margin-top: 10px;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
-    color: white;
-    border-radius: 35px;
-    font-size: 16px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flexbox;
-    align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.tg:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
 }
 
 #avatar-placeholder {
@@ -57,81 +80,41 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
 }
 
-.welcome {
-    padding: 20px;
-    color: #ffffff;
-    text-align: center;
-}
-
-.home {
-    display: inline-block;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+.tg, .home, button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 15px 25px;
+    margin: 10px auto;
+    background: rgba(109, 109, 109, 0.15);
     color: white;
-    padding: 15px 10px;
-    margin-top: 10px;
+    border-radius: 50px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
     font-size: 16px;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flexbox;
-    align-items: center;
-    gap: 10px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
 }
 
-.home:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+.tg:hover, .home:hover, button:hover {
+    border-color: #00f2ff; 
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); 
+    transform: translateY(-4px); 
 }
 
-button {
-    display: inline-block;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
-    color: white;
-    padding: 15px 10px;
-    margin-top: 10px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flexbox;
-    align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-button:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
-}
-
-.paper {
-    font-size: 16px;
-    text-decoration: none;
-    margin: center;
-    color: #ffffff;
-}
-
-.paperbug {
-    font-size: 16px;
-    text-decoration: none;
-    margin: center;
-    color: #ff0000;
-}
+.paper { font-size: 16px; text-decoration: none; color: #ffffff; }
+.paperbug { font-size: 16px; text-decoration: none; color: #ff0000; }
 
 .modal {
     display: none; 
@@ -144,106 +127,12 @@ button:hover {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     animation: fadeIn 0.4s ease-out;
-}
-
-#modal-body {
-    font-size: 16px;
-    line-height: 1.75;
-    color: rgba(255, 255, 255, 0.95);
-}
-
-#modal-body input,
-#modal-body textarea,
-#modal-body select {
-    width: 100%;
-    padding: 16px 20px;
-    margin: 12px 0;
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    transition: all 0.35s ease;
-    box-sizing: border-box;
-}
-
-#modal-body input:focus,
-#modal-body textarea:focus,
-#modal-body select:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 
-        0 0 20px rgba(255, 255, 255, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-#modal-body input::placeholder,
-#modal-body textarea::placeholder {
-    color: rgba(255, 255, 255, 0.55);
-    font-weight: 500;
-    transition: all 0.3s ease;
-    font-family: 'Unbounded', sans-serif;
-}
-
-#modal-body input:focus::placeholder,
-#modal-body textarea:focus::placeholder {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 13px;
-    transform: translateY(-14px);
-    font-weight: 600;
-}
-
-#modal-body textarea {
-    min-height: 120px;
-    resize: vertical;
-    border-radius: 22px;
-}
-
-#modal-body input[type="checkbox"],
-#modal-body input[type="radio"] {
-    width: auto;
-    accent-color: #ffffff44;
-    transform: scale(1.4);
-    margin-right: 12px;
-}
-
-#modal-body button,
-#modal-body .btn {
-    margin-top: 20px;
-    padding: 16px 32px;
-    font-size: 16px;
-    border-radius: 50px;
-    cursor: pointer;
-}
-
-#modal-body label {
-    display: block;
-    margin: 18px 0 8px;
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 600;
-    text-align: left;
-}
-
-#modal-body small {
-    display: block;
-    margin-top: 6px;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 400;
 }
 
 .modal-content {
     position: relative;
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.65), rgba(20, 20, 20, 0.75));
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(10, 10, 10, 0.9));
     margin: 8% auto;
     padding: 40px 30px;
     border-radius: 28px;
@@ -251,27 +140,44 @@ button:hover {
     width: 90%;
     border: 2px solid rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.4),
-        0 02px 15px rgba(255, 255, 255, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     animation: modalPop 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     color: white;
 }
 
-.modal-content h3.paper {
-    font-size: 26px;
-    margin: 0 0 24px 0;
-    text-align: center;
-    font-weight: 700;
-    background: linear-gradient(90deg, #ffffff, #cccccc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+#modal-body input, #modal-body textarea, #modal-body select {
+    width: 100%;
+    padding: 16px 20px;
+    margin: 12px 0;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    box-sizing: border-box;
 }
 
-.modal .close {
+@keyframes auroraFlow {
+    0% { transform: scale(1); filter: blur(60px) hue-rotate(0deg); }
+    100% { transform: scale(1.1); filter: blur(45px) hue-rotate(15deg); }
+}
+
+@keyframes rotateNebula {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalPop {
+    0% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 600px) {
+    .modal-content { margin: 15% auto; padding: 35px 20px; }
+}
+
+.close {
     position: absolute;
     top: 18px;
     right: 24px;
@@ -292,52 +198,8 @@ button:hover {
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.modal .close:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-#modal-body {
-    font-size: 17px;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.92);
-    margin-top: 10px;
-}
-
-@media (max-width: 600px) {
-    .modal-content {
-        margin: 15% auto;
-        padding: 35px 20px;
-        border-radius: 22px;
-    }
-    
-    .modal-content h3.paper {
-        font-size: 23px;
-    }
-    
-    .modal .close {
-        top: 14px;
-        right: 18px;
-        font-size: 34px;
-        width: 40px;
-        height: 40px;
-    }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes modalPop {
-    0% {
-        opacity: 0;
-        transform: translateY(-50px) scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.close:hover {
+    border-color: #00f2ff; 
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); 
+    transform: translateY(-4px); 
 }

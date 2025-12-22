@@ -1,87 +1,165 @@
 body {
-    background: radial-gradient(circle at center, #011f23 0%, #000a0a 50%, #000000 100%);
-    opacity: 100%;
-    font-family: "Unbounded", serif;
-    font-weight: bold;
+    background-color: #000000;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: "Unbounded", serif;
+    font-weight: bold;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 30%, #011f23 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #012b30 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #000a0a 0%, transparent 60%);
+    filter: blur(60px);
+    opacity: 0.8;
+    z-index: -1;
+    animation: auroraFlow 10s ease-in-out infinite alternate;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(1, 31, 35, 0.15) 0%, transparent 50%);
+    z-index: -1;
+    animation: rotateNebula 20s linear infinite;
+}
+
+@keyframes auroraFlow {
+    0% {
+        transform: scale(1) translate(0, 0);
+        filter: blur(60px) hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1.2) translate(-5%, 5%);
+        filter: blur(40px) hue-rotate(15deg);
+    }
+    100% {
+        transform: scale(1) translate(5%, -5%);
+        filter: blur(70px) hue-rotate(-10deg);
+    }
+}
+
+@keyframes rotateNebula {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .floating-home-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 15px 10px;
+    margin-top: 35px;
+    margin-right: 25px;
+    background: rgba(109, 109, 109, 0.15);
     color: white;
-    padding: 14px 10px;
+    border-radius: 35px;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    font-size: 16px;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.floating-home-btn:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
-}
-
-.bigbip {
-    max-width: 600px;
-    padding: 20px;
+.floating-home-btn:hover { 
+    border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-3px); 
 }
 
 .bigbip h1 {
-    font-size: 100px;
+    font-size: 80px;
     margin: 200px 0px 0px;
     line-height: 1;
-    color: white;
-    position: center;
-    display: inline-block;
+    margin-right: 25px;
+    font-family: "Unbounded", serif;
+    color: #fff;
+    position: relative;
+    
+    
+    background: linear-gradient(
+        135deg, 
+        #fff 0%, 
+        #d1eaff 25%, 
+        #fff 50%, 
+        #d1eaff 75%, 
+        #fff 100%
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+    
+    animation: 
+        silverFlow 8s ease infinite,
+        gentleFloat 5s ease-in-out infinite;
+    
+    filter: drop-shadow(0 0 15px rgba(209, 234, 255, 0.2));
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bigbip h1:hover {
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.7));
+    transform: scale(1.05);
+    letter-spacing: 2px;
+}
+
+@keyframes silverFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
 }
 
 .adv {
     text-decoration: none;
+    margin-right: 40px;
 }
 
 .home {
-    display: inline-block;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
-    color: white;
-    padding: 15px 10px;
-    margin-top: 10px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flexbox;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    justify-content: center;
+    text-decoration: none;
+    padding: 15px 10px;
+    margin-top: 35px;
+    margin-right: 25px;
+    background: rgba(109, 109, 109, 0.15);
+    color: white;
+    border-radius: 35px;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Unbounded', sans-serif;
 }
 
-.home:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+.home:hover { 
+    border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-3px); 
 }
 
 @keyframes float {
@@ -96,16 +174,9 @@ body {
     }
 }
 
-.bigbip h1 {
-    animation: float 3s infinite ease-in-out;
-}
-
 #controls {
-            position: fixed;
-            top: 60px;
-            right: 10px;;
-            padding: 14px 10px;
-            display: flex;
+            margin-top: 10px;
+            margin-right: 3px;
             gap: 10px;
         }
 
@@ -121,7 +192,7 @@ body {
 
         .snowflake {
             position: absolute;
-            background: white;
+            background: rgba(255, 255, 255, 0.082);
             border-radius: 50%;
             opacity: 1;
             animation: fall linear infinite;
@@ -132,3 +203,4 @@ body {
                 transform: translateY(90vh);
             }
         }
+

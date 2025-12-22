@@ -1,77 +1,125 @@
+html {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
 body {
-    background: radial-gradient(circle at center, #011f23 0%, #000a0a 50%, #000000 100%);
-    opacity: 100%;
-    font-family: "Unbounded", serif;
-    font-weight: bold;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    background-color: #000000;
+    font-family: "Unbounded", serif;
+    font-weight: bold;
+    color: white;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    text-align: center;
+    justify-content: center;
+    position: relative;
+}
+
+body::before, 
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+body::before {
+    background: 
+        radial-gradient(circle at 20% 30%, #011f23 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #012b30 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #000a0a 0%, transparent 60%);
+    filter: blur(60px);
+    opacity: 0.8;
+    z-index: -2;
+    animation: auroraFlow 10s ease-in-out infinite alternate;
+}
+
+body::after {
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(1, 31, 35, 0.15) 0%, transparent 50%);
+    z-index: -3;
+    animation: rotateNebula 25s linear infinite;
 }
 
 .pam {
+    width: 100%;
     max-width: 800px;
-    padding: 390px;
+    padding: 100px 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
 }
 
 .pam p {
     font-size: 18px;
-    margin: center;
-    color: #ffffff;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    text-align: center;
 }
 
 .pamlink {
-    display: inline-block;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
-    color: white;
-    padding: 15px 20px;
-    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    font-size: 18px;
-    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(12px);
+    margin: 10px;
     border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(109, 109, 109, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
 }
+
+.pamlink { padding: 15px 30px; font-size: 18px; }
 
 .pamlink:hover {
     transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+    border-color: #00f2ff;
+    box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+}
+
+
+@keyframes auroraFlow {
+    0% { transform: scale(1); filter: blur(60px) hue-rotate(0deg); }
+    100% { transform: scale(1.1); filter: blur(45px) hue-rotate(15deg); }
+}
+
+@keyframes rotateNebula {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .backliquid {
-    display: inline-block;
-    background: linear-gradient(135deg, #6d6d6d3d, #6d6d6d3d);
-    color: white;
-    padding: 15px 20px;
-    margin-top: 10px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.171);
-    transition: all 0.3s ease;
-    z-index: 9999;
-    display: flexbox;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    justify-content: center;
+    text-decoration: none;
+    padding: 15px 25px;
+    margin: 8px;
+    background: rgba(109, 109, 109, 0.15);
+    color: white;
+    border-radius: 35px;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Unbounded', sans-serif;
 }
 
-.backliquid:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.171);
-    background: linear-gradient(135deg, #6d6d6d3d, #ffffff3d);
+.backliquid:hover { 
+    border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-3px); 
 }
