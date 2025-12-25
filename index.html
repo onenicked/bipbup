@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIPBUP</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(99936739, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+       });
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+    <style>
+    :root {
+        --accent: #00ff88;
+        --bg: #08090a;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.08);
+    }
+
+    body { 
+        background-color: var(--bg); 
+        color: #e0e0e0; 
+        font-family: 'Unbounded', sans-serif;
+        background-image: radial-gradient(circle at 50% -20%, #1a2c23 0%, transparent 50%);
+        overflow-x: hidden;
+    }
+
+    .glass-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .glass-card:hover {
+        border-color: var(--accent);
+        background: rgba(0, 255, 136, 0.04);
+        box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
+    }
+
+    .accent-text {
+        color: var(--accent);
+        text-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    }
+
+    .nav-link {
+        position: relative;
+        padding: 8px 0;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .nav-link.btn-login {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 20px;
+        border-radius: 9999px;
+        text-decoration: none !important;
+    }
+
+    .nav-link.btn-login:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    }
+
+    .nav-link:not(.btn-login)::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: all 0.3s;
+        transform: translateX(-50%);
+        box-shadow: 0 0 10px var(--accent);
+    }
+
+    .nav-link:not(.btn-login):hover::after { width: 100%; }
+    .nav-link:not(.btn-login):hover { color: var(--accent); }
+
+    .btn-primary {
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+    }
+
+    .btn-primary:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
+    }
+
+    .pamyatka-img-container {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+    .pamyatka-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    input {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 0 24px !important;
+        border-radius: 16px !important;
+        outline: none !important;
+        color: white !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        height: 60px !important;
+        width: 100%;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    input:focus {
+        border-color: var(--accent) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .error-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        text-align: center;
+    }
+
+    .mobile-nav {
+        background: rgba(8, 9, 10, 0.98);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+    <noscript><div><img src="https://mc.yandex.ru/watch/99936739" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        const LogoIcon = ({ className }) => (
+            <img 
+                src="favicon.ico"
+                alt="Logo" 
+                className={className} 
+                style={{ width: '32px', height: '32px', objectFit: 'contain'}} 
+            />
+        );
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
+            authDomain: "bipbupweb.firebaseapp.com",
+            projectId: "bipbupweb",
+            storageBucket: "bipbupweb.firebasestorage.app",
+            messagingSenderId: "1059922568826",
+            appId: "1:1059922568826:web:5bbf46006f29d96a273dc3"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const ADMINS = ["ncVuGk6MDjMZv4hhRtIdM27w8iq2", "stat8qyHflOz44oVUDPTGfMsetV2"];
+
+        const SERVERS = [
+            { n: 1, name: "Downtown", id: "803" }, { n: 2, name: "Strawberry", id: "102" },
+            { n: 3, name: "Vinewood", id: "170" }, { n: 4, name: "Blackberry", id: "262" },
+            { n: 5, name: "Insquad", id: "336" }, { n: 6, name: "Sunrise", id: "412" },
+            { n: 7, name: "Rainbow", id: "464" }, { n: 8, name: "Richman", id: "530" },
+            { n: 9, name: "Eclipse", id: "600" }, { n: 10, name: "LaMesa", id: "651" },
+            { n: 11, name: "Burton", id: "1038" }, { n: 12, name: "Rockford", id: "1143" },
+            { n: 13, name: "Alta", id: "1232" }, { n: 14, name: "Del Perro", id: "1314" },
+            { n: 15, name: "Davis", id: "1395" }, { n: 16, name: "Harmony", id: "1478" },
+            { n: 17, name: "Redwood", id: "1535" }, { n: 18, name: "Hawick", id: "1644" },
+            { n: 19, name: "Grapeseed", id: "1732" }, { n: 20, name: "Murrieta", id: "1821" },
+            { n: 21, name: "Vespucci", id: "1912" }, { n: 22, name: "Milton", id: "1984" },
+            { n: 23, name: "La Puerta", id: "2071" }
+        ];
+
+        const ErrorPage = ({ code, text, navigate }) => (
+            <div className="error-page">
+                <h1 className="text-9xl font-black accent-text mb-4">{code}</h1>
+                <p className="text-xl opacity-40 mb-10">{text}</p>
+                <button onClick={() => navigate('home')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">На главную</button>
+            </div>
+        );
+
+        const App = () => {
+            const [page, setPage] = useState('home');
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+            useEffect(() => {
+                const unsub = auth.onAuthStateChanged(u => {
+                    setUser(u);
+                    setLoading(false);
+                });
+                return () => unsub();
+            }, []);
+
+            const navigate = (p) => { 
+                window.scrollTo({top: 0, behavior: 'smooth'}); 
+                setPage(p); 
+                setIsMenuOpen(false);
+            };
+
+            const renderPage = () => {
+                if (loading) return <div className="flex justify-center py-20 accent-text">Загрузка...</div>;
+                
+                switch(page) {
+                    case 'home': return <Home navigate={navigate} />;
+                    case 'links': return <Links />;
+                    case 'player': return <Player />;
+                    case 'login': return <Login navigate={navigate} />;
+                    case 'lk': return user ? <Profile user={user} navigate={navigate} /> : <Login navigate={navigate} />;
+                    default: return <ErrorPage code="404" text="Страница не найдена" navigate={navigate} />;
+                }
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col max-w-6xl mx-auto px-4 md:px-6">
+                    <header className="flex justify-between items-center py-6 md:py-10">
+                        <div onClick={() => navigate('home')} className="z-[1100] text-xl md:text-2xl font-black tracking-tighter cursor-pointer flex items-center gap-3 group">
+                            <LogoIcon className="group-hover:rotate-12 transition-transform duration-500 rounded-lg" />
+                            BIPBUP
+                        </div>
+
+                        <nav className="hidden md:flex gap-10 text-[10px] font-medium uppercase tracking-[0.2em] items-center">
+                            <button onClick={() => navigate('home')} className="nav-link">Главная</button>
+                            <button onClick={() => navigate('links')} className="nav-link">База знаний</button>
+                            <button onClick={() => navigate('player')} className="nav-link">Плееры</button>
+                            {user ? (
+                                <button onClick={() => navigate('lk')} className="nav-link btn-login font-bold">Аккаунт</button>
+                            ) : (
+                                <button onClick={() => navigate('login')} className="nav-link btn-login">Вход</button>
+                            )}
+                        </nav>
+
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden z-[1100] relative w-8 h-8">
+                            <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? 'rotate-45 top-4' : 'top-3'}`}></span>
+                            <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? '-rotate-45 top-4' : 'top-5'}`}></span>
+                        </button>
+
+                        {isMenuOpen && (
+                            <div className="fixed inset-0 mobile-nav flex flex-col items-center justify-center gap-8 text-sm font-bold uppercase tracking-widest animate-in fade-in zoom-in duration-300">
+                                <button onClick={() => navigate('home')}>Главная</button>
+                                <button onClick={() => navigate('links')}>База данных</button>
+                                <button onClick={() => navigate('player')}>Медиа</button>
+                                {user ? (
+                                    <button onClick={() => navigate('lk')} className="accent-text">Cabinet</button>
+                                ) : (
+                                    <button onClick={() => navigate('login')} className="accent-text">Вход</button>
+                                )}
+                            </div>
+                        )}
+                    </header>
+
+                    <main className="flex-grow">
+                        {renderPage()}
+                    </main>
+
+                    <footer className="py-10 md:py-20 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="text-[9px] md:text-[10px] opacity-30 uppercase tracking-[0.4em] text-center">© 2024-2026 https://github.com/XQR4D/bipbup</div>
+                        <div className="flex gap-6 md:gap-8 opacity-40 text-[9px] uppercase font-bold tracking-widest">
+                            <a href="https://policies.google.com/privacy?hl=en-US" className="hover:text-[#00ff88] transition">Privacy</a>
+                            <a href="https://policies.google.com/terms?hl=en-US" className="hover:text-[#00ff88] transition">Terms</a>
+                            <a href="https://xqr4d.github.io/XQR4D/" className="hover:text-[#00ff88] transition">Developer</a>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const Home = ({ navigate }) => (
+            <div className="space-y-12 md:space-y-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
+                <section className="relative py-10 md:py-20 text-center md:text-left">
+                    <div className="max-w-3xl">
+                        <h1 className="text-4xl md:text-7xl font-black mb-6 md:mb-8 leading-[1] md:leading-[0.9] tracking-tighter italic">
+                            NEW ERA IN<br className="hidden md:block" /> <span className="accent-text">BLOGGER</span> PAGE
+                        </h1>
+                        <p className="text-base md:text-lg opacity-40 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8 md:mb-10">
+                            Обновленный дизайн, быстрые плееры, удобный интерфейс, памятки от пользователей.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <button onClick={() => navigate('links')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">Перейти к памяткам</button>
+                            <button onClick={() => navigate('player')} className="glass-card px-10 py-4 rounded-xl text-xs uppercase tracking-widest font-bold">Смотреть видео</button>
+                        </div>
+                    </div>
+                </section>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    {[
+                        { t: 'База знаний', d: 'Полный реестр законодательных баз всех 23 серверов проекта + памятки от пользователей.' },
+                        { t: 'Fast API плееры', d: 'Смотрите новые видео без задержки, зависаний в разных плеерах.' },
+                        { t: 'Простая регистрация', d: 'Обновленный вход и регистрация, теперь быстрее и с большими вариацими входа.' }
+                    ].map((c, i) => (
+                        <div key={i} className="glass-card p-8 md:p-10 rounded-3xl">
+                            <div className="w-10 h-10 bg-[#00ff88]/10 rounded-lg flex items-center justify-center mb-6 text-[#00ff88] font-black">
+                                0{i + 1}
+                            </div>
+                            <h3 className="text-lg md:text-xl font-bold mb-4 uppercase italic tracking-tighter">{c.t}</h3>
+                            <p className="text-xs md:text-sm opacity-40 leading-relaxed font-light">{c.d}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const Links = () => {
+            const [pamyatki, setPamyatki] = useState([]);
+
+            useEffect(() => {
+                const unsub = db.collection("pamyatki")
+                    .where("status", "==", "approved")
+                    .orderBy("createdAt", "desc")
+                    .onSnapshot(snap => {
+                        const data = snap.docs.map(doc => doc.data());
+                        setPamyatki(data);
+                    }, err => console.error(err));
+                return () => unsub();
+            }, []);
+
+            return (
+                <div className="space-y-12 md:space-y-16 animate-in fade-in duration-500">
+                    <div className="space-y-8 md:space-y-12">
+                        <div className="text-center space-y-4">
+                            <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Законодательство</h2>
+                            <p className="text-[10px] md:text-xs opacity-30 uppercase tracking-widest">Кликните на нужный сервер</p>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+                            {SERVERS.map(s => (
+                                <a key={s.n} href={`https://forum.gta5rp.com/forums/zakonodatelnaja-baza.${s.id}/`} target="_blank" className="glass-card p-4 md:p-6 rounded-2xl text-center group">
+                                    <div className="text-[9px] md:text-[10px] opacity-20 mb-1 md:mb-2 font-bold group-hover:text-[#00ff88] transition">#{s.n}</div>
+                                    <div className="text-[10px] md:text-xs font-bold uppercase tracking-tighter">{s.name}</div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="space-y-8 md:space-y-12">
+                        <div className="text-center space-y-4">
+                            <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Памятки от игроков</h2>
+                            <p className="text-[10px] md:text-xs opacity-30 uppercase tracking-widest">Для упрощения игры в гос.структурах</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {pamyatki.length > 0 ? pamyatki.map((p, i) => (
+                                <div key={i} className="glass-card p-5 md:p-6 rounded-3xl space-y-4 flex flex-col">
+                                    <h4 className="text-xs md:text-sm font-bold uppercase tracking-widest accent-text truncate">{p.title}</h4>
+                                    <div className="pamyatka-img-container shadow-2xl">
+                                        <img src={p.imageUrl} alt={p.title} loading="lazy" />
+                                    </div>
+                                </div>
+                            )) : (
+                                <p className="col-span-full text-center opacity-30 text-xs uppercase py-10">Загрузка памяток...</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Player = () => {
+            const [activePlayer, setActivePlayer] = useState('youtube');
+            const [vkUrl, setVkUrl] = useState(localStorage.getItem('cached_vk') || "");
+            const [ytUrl, setYtUrl] = useState(localStorage.getItem('cached_yt') || "");
+            const [nebulaUrl, setNebulaUrl] = useState(localStorage.getItem('cached_nebula') || "");
+            const [isLoading, setIsLoading] = useState(false);
+
+            useEffect(() => {
+                const hasCache = localStorage.getItem('cached_vk') && localStorage.getItem('cached_yt') && localStorage.getItem('cached_nebula');
+                if (hasCache) return;
+
+                const YT_CHANNEL_ID = 'UCjrmposCYp6sJsT2VybjH9A';
+                const VK_GROUP_ID = 'bipbupyoutube';
+                
+                const PROXIES = [
+                    'https://api.allorigins.win/get?url=',
+                    'https://corsproxy.io/?',
+                    'https://thingproxy.freeboard.io/fetch/'
+                ];
+
+                const fetchWithRetry = async (targetUrl) => {
+                    for (let proxy of PROXIES) {
+                        try {
+                            const res = await fetch(proxy + encodeURIComponent(targetUrl));
+                            if (res.ok) return await res.json();
+                        } catch (e) { continue; }
+                    }
+                    throw new Error("All proxies failed");
+                };
+
+                const fetchMedia = async () => {
+                    setIsLoading(true);
+                    try {
+                        const ytData = await fetchWithRetry(`https://www.youtube.com/channel/${YT_CHANNEL_ID}/videos`);
+                        const ytMatch = ytData.contents.match(/\"videoId\":\"([^\"]+)\"/);
+                        if (ytMatch) {
+                            const url = `https://www.youtube.com/embed/${ytMatch[1]}`;
+                            setYtUrl(url);
+                            localStorage.setItem('cached_yt', url);
+                        }
+
+                        const vkData = await fetchWithRetry(`https://vk.com/${VK_GROUP_ID}/videos`);
+                        const html = vkData.contents;
+                        const videoMatch = html.match(/video(-?\d+)_(\d+)/);
+                        if (videoMatch) {
+                            const hashMatch = html.match(/\"hash\":\"([a-z0-9]+)\"/i) || html.match(/hash=([a-z0-9]+)/i);
+                            const url = `https://vkvideo.ru/video_ext.php?oid=${videoMatch[1]}&id=${videoMatch[2]}${hashMatch ? `&hash=${hashMatch[1]}` : ''}&hd=3`;
+                            setVkUrl(url);
+                            localStorage.setItem('cached_vk', url);
+                        }
+
+                        const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
+                        const nebulaData = await nebulaRes.json();
+                        const videoAsset = nebulaData.assets.find(a => a.name.endsWith('.mp4'));
+                        if (videoAsset) {
+                            const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(videoAsset.browser_download_url)}`;
+                            setNebulaUrl(url);
+                            localStorage.setItem('cached_nebula', url);
+                        }
+                    } catch (e) {
+                        console.error("Media parse error", e);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchMedia();
+            }, []);
+
+            const players = { youtube: ytUrl, vk: vkUrl, nebula: nebulaUrl };
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 animate-in fade-in duration-700">
+                    <div className="glass-card p-2 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#00ff88]/5 relative">
+                        {isLoading && <div className="absolute inset-0 z-10 bg-black/50 backdrop-blur flex items-center justify-center text-[10px] uppercase tracking-widest font-black accent-text text-center px-4">Синхронизация...</div>}
+                        <div className="aspect-video bg-black rounded-[1rem] md:rounded-[1.8rem] overflow-hidden">
+                            <iframe className="w-full h-full" src={players[activePlayer]} allowFullScreen frameBorder="0"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                        <div className="glass-card p-6 md:p-8 rounded-3xl space-y-6">
+                            <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Источник</h4>
+                            <div className="flex flex-wrap gap-3 md:gap-4">
+                                {['youtube', 'vk', 'nebula'].map(p => (
+                                    <button key={p} onClick={() => setActivePlayer(p)} className={`flex-grow md:flex-none px-4 md:px-6 py-3 rounded-xl text-[9px] md:text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activePlayer === p ? 'bg-[#00ff88] text-black shadow-[0_0_20px_#00ff88]' : 'bg-white/5 opacity-40 hover:opacity-100 hover:bg-white/10'}`}>
+                                        {p}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="glass-card p-6 md:p-8 rounded-3xl flex items-center justify-between border-l-4 border-[#00ff88]">
+                            <div>
+                                <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">{activePlayer} Player</div>
+                                <div className="text-[9px] md:text-[10px] opacity-30 uppercase font-bold mt-1">{isLoading ? 'Парсинг...' : 'Контент актуален'}</div>
+                            </div>
+                            <div className={`w-3 h-3 bg-[#00ff88] rounded-full ${!isLoading && 'animate-ping'}`}></div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Login = ({ navigate }) => {
+            const [mode, setMode] = useState('login');
+            const [email, setEmail] = useState('');
+            const [pass, setPass] = useState('');
+            const [resetSent, setResetSent] = useState(false);
+
+            const handleAuth = (e) => {
+                e.preventDefault();
+                const promise = mode === 'login' 
+                    ? auth.signInWithEmailAndPassword(email, pass) 
+                    : auth.createUserWithEmailAndPassword(email, pass);
+                promise.then(() => navigate('lk')).catch(e => alert(e.message));
+            };
+
+            const handleReset = (e) => {
+                e.preventDefault();
+                auth.sendPasswordResetEmail(email).then(() => {
+                    setResetSent(true);
+                    setTimeout(() => setMode('login'), 3000);
+                }).catch(e => alert(e.message));
+            };
+
+            return (
+                <div className="max-w-md mx-auto py-6 md:py-10">
+                    <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8 border-t-2 border-[#00ff88]/20">
+                        <div className="flex justify-between border-b border-white/5 pb-6">
+                            <button onClick={() => setMode('login')} className={`text-[10px] uppercase font-bold tracking-widest transition ${mode === 'login' ? 'text-[#00ff88]' : 'opacity-20'}`}>Логин</button>
+                            <button onClick={() => setMode('reg')} className={`text-[10px] uppercase font-bold tracking-widest transition ${mode === 'reg' ? 'text-[#00ff88]' : 'opacity-20'}`}>Регистрация</button>
+                        </div>
+                        {mode === 'reset' ? (
+                            <form onSubmit={handleReset} className="space-y-4">
+                                <h3 className="text-[10px] font-bold uppercase tracking-widest text-center">Восстановление</h3>
+                                <input type="email" placeholder="Email" className="w-full" onChange={e => setEmail(e.target.value)} required />
+                                <button className="btn-primary w-full py-5 rounded-2xl uppercase text-[10px] tracking-[0.2em]">Отправить ссылку</button>
+                                {resetSent && <p className="text-[9px] text-green-400 text-center animate-pulse">Проверьте почту!</p>}
+                                <button type="button" onClick={() => setMode('login')} className="w-full text-[9px] opacity-40 uppercase">Назад</button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleAuth} className="space-y-4">
+                                <input type="email" placeholder="Email Address" className="w-full" onChange={e => setEmail(e.target.value)} required />
+                                <input type="password" placeholder="Password" className="w-full" onChange={e => setPass(e.target.value)} required />
+                                <button className="btn-primary w-full py-5 rounded-2xl uppercase text-[10px] tracking-[0.2em]">Продолжить</button>
+                                <button type="button" onClick={() => setMode('reset')} className="w-full text-[9px] opacity-40 uppercase hover:opacity-100 transition">Забыли пароль?</button>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Profile = ({ user, navigate }) => {
+            const [isUploading, setIsUploading] = useState(false);
+            const [avatar, setAvatar] = useState(user?.photoURL);
+            const [moderationCount, setModerationCount] = useState(0);
+            const [showModal, setShowModal] = useState(null); 
+            const [pendingPamyatki, setPendingPamyatki] = useState([]);
+            const fileInput = useRef();
+
+            useEffect(() => {
+                const unsub = db.collection("pamyatki")
+                    .where("status", "==", "pending")
+                    .onSnapshot(snap => {
+                        setModerationCount(snap.size);
+                        setPendingPamyatki(snap.docs.map(doc => ({id: doc.id, ...doc.data()})));
+                    });
+                return () => unsub();
+            }, []);
+
+            const uploadAvatar = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                setIsUploading(true);
+                try {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    const res = await fetch(`https://api.imgbb.com/1/upload?key=fac7e04a7bdbc05013b7483b33eae743`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    const url = data.data.url;
+                    await auth.currentUser.updateProfile({ photoURL: url });
+                    setAvatar(url);
+                    alert("Аватар обновлен!");
+                } catch (err) { alert("Ошибка загрузки"); } finally { setIsUploading(false); }
+            };
+
+            const submitPamyatka = async (e) => {
+                e.preventDefault();
+                const title = e.target.p_title.value.trim();
+                const url = e.target.p_url.value.trim();
+                if(!title || !url) return alert("Заполните поля");
+                try {
+                    await db.collection("pamyatki").add({
+                        uid: user.uid,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        title, imageUrl: url,
+                        status: "pending",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    alert("Отправлено на модерацию!");
+                    setShowModal(null);
+                } catch (err) { alert(err.message); }
+            };
+
+            const handleMod = async (id, status) => {
+                if(status === 'approved') {
+                    await db.collection("pamyatki").doc(id).update({ status: "approved" });
+                    alert("Принято!");
+                } else {
+                    if(confirm("Удалить навсегда?")) {
+                        await db.collection("pamyatki").doc(id).delete();
+                        alert("Удалено.");
+                    }
+                }
+            };
+
+            const changeNickname = async (e) => {
+                e.preventDefault();
+                const newName = e.target.new_nickname.value.trim();
+                if (!newName) return alert("Введите никнейм!");
+                try {
+                    await auth.currentUser.updateProfile({ displayName: newName });
+                    alert("Никнейм обновлён!");
+                    window.location.reload();
+                } catch (e) { alert(e.message); }
+            };
+
+            const changeEmail = async (e) => {
+                e.preventDefault();
+                const newEmail = e.target.new_email.value.trim().toLowerCase();
+                const password = e.target.current_password_email.value;
+                if (!newEmail || !password) return alert("Заполните все поля!");
+                try {
+                    const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+                    await auth.currentUser.reauthenticateWithCredential(credential);
+                    await auth.currentUser.verifyBeforeUpdateEmail(newEmail);
+                    alert("Проверьте новый email! Перейдите по ссылке в письме.");
+                } catch (e) { alert(e.message); }
+            };
+
+            const changePassword = async (e) => {
+                e.preventDefault();
+                const cur = e.target.current_password.value;
+                const np = e.target.new_password.value;
+                const npc = e.target.new_password_confirm.value;
+                if (np !== npc) return alert("Пароли не совпадают!");
+                if (np.length < 6) return alert("Пароль должен быть не менее 6 символов!");
+                try {
+                    const cred = firebase.auth.EmailAuthProvider.credential(user.email, cur);
+                    await auth.currentUser.reauthenticateWithCredential(cred);
+                    await auth.currentUser.updatePassword(np);
+                    alert("Пароль изменён!");
+                    e.target.reset();
+                } catch (e) { alert(e.message); }
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700">
+                    <div className="glass-card p-8 md:p-12 rounded-[3rem] flex flex-col md:flex-row items-center gap-10">
+                        <div className="relative group cursor-pointer" onClick={() => fileInput.current.click()}>
+                            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-[#00ff88]/20 group-hover:border-[#00ff88] transition-all duration-500 shadow-2xl">
+                                {avatar ? (
+                                    <img src={avatar} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full bg-white/5 flex items-center justify-center text-4xl font-black accent-text">
+                                        {(user.displayName || user.email)[0].toUpperCase()}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-[#00ff88]">Сменить</span>
+                            </div>
+                            <input type="file" ref={fileInput} className="hidden" accept="image/*" onChange={uploadAvatar} />
+                            {isUploading && <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#00ff88] text-black text-[8px] px-3 py-1 rounded-full font-bold animate-bounce">UP...</div>}
+                        </div>
+                        
+                        <div className="text-center md:text-left space-y-4">
+                            <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase">{user.displayName || 'Пользователь'}</h2>
+                            <p className="text-xs md:text-sm opacity-30 font-medium tracking-widest uppercase">{user.email}</p>
+                            <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                                <button onClick={() => setShowModal('add')} className="btn-primary px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest">Добавить памятку</button>
+                                {ADMINS.includes(user.uid) && (
+                                    <button onClick={() => setShowModal('mod')} className="glass-card px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold border-l-4 border-[#00ff88]">
+                                        Модерация ({moderationCount})
+                                    </button>
+                                )}
+                                <button onClick={() => auth.signOut().then(() => navigate('home'))} className="bg-white/5 hover:bg-red-500/20 px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition">Выйти</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8">
+                            <h3 className="text-lg font-black italic uppercase tracking-tighter accent-text">Настройки профиля</h3>
+                            
+                            <form onSubmit={changeNickname} className="space-y-4">
+                                <label className="text-[9px] uppercase opacity-30 font-bold tracking-[0.2em]">Изменить никнейм</label>
+                                <input name="new_nickname" type="text" placeholder="Новый никнейм" defaultValue={user.displayName} />
+                                <button className="btn-primary w-full py-4 rounded-xl text-[9px] uppercase tracking-widest">Обновить имя</button>
+                            </form>
+
+                            <form onSubmit={changeEmail} className="space-y-4 pt-4">
+                                <label className="text-[9px] uppercase opacity-30 font-bold tracking-[0.2em]">Сменить Email</label>
+                                <input name="new_email" type="email" placeholder="Новый email" required />
+                                <input name="current_password_email" type="password" placeholder="Текущий пароль" required />
+                                <button className="btn-primary w-full py-4 rounded-xl text-[9px] uppercase tracking-widest">Сменить почту</button>
+                            </form>
+                        </div>
+
+                        <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8">
+                            <h3 className="text-lg font-black italic uppercase tracking-tighter accent-text">Безопасность</h3>
+                            <form onSubmit={changePassword} className="space-y-4">
+                                <label className="text-[9px] uppercase opacity-30 font-bold tracking-[0.2em]">Смена пароля</label>
+                                <input name="current_password" type="password" placeholder="Текущий пароль" required />
+                                <input name="new_password" type="password" placeholder="Новый пароль" required />
+                                <input name="new_password_confirm" type="password" placeholder="Повторите пароль" required />
+                                <button className="btn-primary w-full py-4 rounded-xl text-[9px] uppercase tracking-widest">Обновить пароль</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {showModal === 'add' && (
+                        <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+                            <div className="glass-card w-full max-w-lg p-8 md:p-10 rounded-[2.5rem] space-y-6 relative border-t-2 border-[#00ff88]/20 animate-in zoom-in duration-300">
+                                <button onClick={() => setShowModal(null)} className="absolute top-6 right-6 opacity-30 hover:opacity-100">✕</button>
+                                <h3 className="text-xl font-black italic uppercase tracking-tighter text-center">Новая памятка</h3>
+                                <form onSubmit={submitPamyatka} className="space-y-4">
+                                    <input name="p_title" placeholder="Название (напр. Процессуальный кодекс)" required />
+                                    <input name="p_url" type="url" placeholder="Прямая ссылка на изображение" required />
+                                    <div className="p-4 bg-white/5 rounded-2xl text-[9px] opacity-40 leading-relaxed uppercase tracking-widest">
+                                        Используйте imgbb.com для загрузки. Копируйте "Direct Link".
+                                    </div>
+                                    <button className="btn-primary w-full py-5 rounded-2xl text-[10px] uppercase tracking-[0.2em]">Отправить</button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {showModal === 'mod' && (
+                        <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+                            <div className="glass-card w-full max-w-2xl max-h-[80vh] overflow-y-auto p-8 md:p-10 rounded-[2.5rem] space-y-6 relative border-t-2 border-[#00ff88]/20 animate-in zoom-in duration-300">
+                                <button onClick={() => setShowModal(null)} className="absolute top-6 right-6 opacity-30 hover:opacity-100">✕</button>
+                                <h3 className="text-xl font-black italic uppercase tracking-tighter">На модерации</h3>
+                                {pendingPamyatki.length === 0 ? <p className="opacity-20 text-center py-10 uppercase text-xs tracking-widest">Пусто</p> : (
+                                    <div className="space-y-6">
+                                        {pendingPamyatki.map(p => (
+                                            <div key={p.id} className="p-6 bg-white/5 rounded-3xl space-y-4 border border-white/5">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className="font-bold accent-text uppercase text-xs tracking-widest">{p.title}</h4>
+                                                        <p className="text-[9px] opacity-30 mt-1 uppercase">От: {p.email}</p>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <button onClick={() => handleMod(p.id, 'approved')} className="bg-[#00ff88] text-black p-2 rounded-lg hover:scale-110 transition">✓</button>
+                                                        <button onClick={() => handleMod(p.id, 'reject')} className="bg-red-500 text-white p-2 rounded-lg hover:scale-110 transition">✕</button>
+                                                    </div>
+                                                </div>
+                                                <img src={p.imageUrl} className="w-full rounded-xl border border-white/10" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
