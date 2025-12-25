@@ -407,47 +407,9 @@
             const [isLoading, setIsLoading] = useState(false);
 
 useEffect(() => {
-    const cached = localStorage.getItem('cached_vk');
-    if (cached) setVkUrl(cached);
-
-    const VK_OWNER = '-209507445';
-    const vkVideosPage = `https://vk.com/videos${VK_OWNER}`;
-    const corsProxy = 'https://api.allorigins.win/get?url=';
-
-    const parseVkLatest = async () => {
-        try {
-            const res = await fetch(`${corsProxy}${encodeURIComponent(vkVideosPage)}`);
-            const json = await res.json();
-            const html = json.contents || '';
-
-            const m = html.match(/video(-?\d+)_([0-9]+)/);
-            if (m) {
-                const owner = m[1];
-                const id = m[2];
-
-                let hash = '';
-                const hashMatch = html.match(new RegExp(`video${owner}_${id}.*?hash:\s*'([a-f0-9]+)'`, 'i')) || html.match(/hash=([a-f0-9]{8,})/i);
-                if (hashMatch) hash = hashMatch[1];
-
-                let embed = `https://vk.com/video_ext.php?oid=${owner}&id=${id}${hash ? `&hash=${hash}` : ''}&hd=3`;
-                embed = embed.replace('vk.com/video_ext.php', 'vkvideo.ru/video_ext.php');
-
-                setVkUrl(embed);
-                localStorage.setItem('cached_vk', embed);
-                return;
-            }
-
-            const hrefMatch = html.match(/https?:\/\/vk\.com\/video-?\d+_\d+/i);
-            if (hrefMatch) {
-                setVkUrl(hrefMatch[0]);
-                localStorage.setItem('cached_vk', hrefMatch[0]);
-            }
-        } catch (e) {
-            console.error('VK parse failed', e);
-        }
-    };
-
-    parseVkLatest();
+    const videoUrl = "https://vkvideo.ru/video_ext.php?oid=-209507445&id=456239412&hash=092e61cf580a6672&hd=3";
+    setVkUrl(videoUrl);
+    localStorage.setItem('cached_vk', videoUrl);
 
     const fetchAutomated = async () => {
         setIsLoading(true);
