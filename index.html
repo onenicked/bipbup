@@ -405,136 +405,63 @@
             const [ytUrl, setYtUrl] = useState(localStorage.getItem('cached_yt') || "");
             const [nebulaUrl, setNebulaUrl] = useState(localStorage.getItem('cached_nebula') || "");
             const [isLoading, setIsLoading] = useState(false);
-            const [failedPlayers, setFailedPlayers] = useState(new Set());
 
             useEffect(() => {
-                const YT_CHANNEL_ID = 'UCjrmposCYp6sJsT2VybjH9A';
-                const VK_GROUP_ID = 'bipbupyoutube';
-                const UPDATE_INTERVAL = 3.6e6;
+                const unsub = db.collection("settings").doc("latest_media")
+                    .onSnapshot(doc => {
+                        if (doc.exists && doc.data().vk) {
+                            setVkUrl(doc.data().vk);
+                            localStorage.setItem('cached_vk', doc.data().vk);
+                        }
+                    });
 
-                const PROXIES = [
-                    'https://api.allorigins.win/get?url=',
-                    'https://api.codetabs.com/v1/proxy?quest=',
-                    'https://corsproxy.io/?'
-                ];
-
-                const fetchWithRetry = async (url) => {
-                    for (let proxy of PROXIES) {
-                        try {
-                            const res = await fetch(proxy + encodeURIComponent(url));
-                            if (res.ok) {
-                                const data = await res.json();
-                                return data.contents || data;
-                            }
-                        } catch (e) { continue; }
-                    }
-                    return null;
-                };
-
-                const checkPlayerHealth = async (url) => {
-                    if (!url) return false;
-                    try {
-                        const controller = new AbortController();
-                        const id = setTimeout(() => controller.abort(), 5000);
-                        const res = await fetch(PROXIES[0] + encodeURIComponent(url), { signal: controller.signal });
-                        clearTimeout(id);
-                        return res.ok;
-                    } catch { return false; }
-                };
-
-                const fetchMedia = async () => {
+                const fetchAutomated = async () => {
                     setIsLoading(true);
-                    const tasks = [
-                        fetchWithRetry(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`),
-                        fetchWithRetry(`https://vk.com/video/@${VK_GROUP_ID}`),
-                        fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest').then(r => r.json())
-                    ];
-
-                    const [ytRes, vkRes, nebulaRes] = await Promise.allSettled(tasks);
-
-                    if (ytRes.status === 'fulfilled' && ytRes.value) {
-                        const videoIdMatch = ytRes.value.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
-                        if (videoIdMatch) {
-                            const url = `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+                    try {
+                        const ytRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCjrmposCYp6sJsT2VybjH9A')}`);
+                        const ytData = await ytRes.json();
+                        const ytId = ytData.contents?.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
+                        if (ytId) {
+                            const url = `https://www.youtube.com/embed/${ytId}?rel=0`;
                             setYtUrl(url);
                             localStorage.setItem('cached_yt', url);
                         }
-                    }
 
-                    if (vkRes.status === 'fulfilled' && vkRes.value) {
-                        const html = vkRes.value;
-                        let vkData = null;
-                        const embedMatch = html.match(/video_ext\.php\?oid=(-?\d+)&id=(\d+)&hash=([a-f0-9]+)/i);
-                        if (embedMatch) {
-                            vkData = { oid: embedMatch[1], id: embedMatch[2], hash: embedMatch[3] };
-                        } else {
-                            const videoMatch = html.match(/\/video(-?\d+)_(\d+)/);
-                            if (videoMatch) {
-                                const hashMatch = html.match(/hash[":=]\s*['"]?([a-f0-9]{16})['"]?/i);
-                                vkData = { oid: videoMatch[1], id: videoMatch[2], hash: hashMatch ? hashMatch[1] : null };
-                            }
-                        }
-                        if (vkData) {
-                            const finalUrl = `https://vkvideo.ru/video_ext.php?oid=${vkData.oid}&id=${vkData.id}${vkData.hash ? `&hash=${vkData.hash}` : ''}&hd=3`;
-                            setVkUrl(finalUrl);
-                            localStorage.setItem('cached_vk', finalUrl);
-                        }
-                    }
-
-                    if (nebulaRes.status === 'fulfilled' && nebulaRes.value) {
-                        const videoAsset = nebulaRes.value.assets?.find(a => a.name.endsWith('.mp4'));
-                        if (videoAsset) {
-                            const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(videoAsset.browser_download_url)}`;
+                        const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
+                        const nebulaData = await nebulaRes.json();
+                        const asset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
+                        if (asset) {
+                            const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(asset.browser_download_url)}`;
                             setNebulaUrl(url);
                             localStorage.setItem('cached_nebula', url);
                         }
-                    }
-                    localStorage.setItem('last_full_update', Date.now());
+                    } catch (e) {}
                     setIsLoading(false);
                 };
 
-                const lastUpdate = localStorage.getItem('last_full_update');
-                if (!lastUpdate || (Date.now() - lastUpdate > UPDATE_INTERVAL)) {
-                    fetchMedia();
-                }
+                fetchAutomated();
+                return () => unsub();
             }, []);
 
             const players = { youtube: ytUrl, vk: vkUrl, nebula: nebulaUrl };
-            const playerOrder = ['youtube', 'vk', 'nebula'];
-
-            const handlePlayerError = () => {
-                setFailedPlayers(prev => {
-                    const next = new Set(prev).add(activePlayer);
-                    const nextAvailable = playerOrder.find(p => !next.has(p) && players[p]);
-                    if (nextAvailable) {
-                        setActivePlayer(nextAvailable);
-                    }
-                    return next;
-                });
-            };
 
             return (
                 <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 animate-in fade-in duration-700">
                     <div className="glass-card p-2 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#00ff88]/5 relative">
-                        {isLoading && (
-                            <div className="absolute inset-0 z-10 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center rounded-[inherit] border border-[#00ff88]/20">
-                                <div className="w-10 h-10 border-2 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-4"></div>
-                                <div className="text-[10px] uppercase tracking-[0.4em] font-black accent-text">Загрузка последних роликов</div>
-                            </div>
-                        )}
                         <div className="aspect-video bg-black rounded-[1rem] md:rounded-[1.8rem] overflow-hidden">
                             {players[activePlayer] ? (
                                 <iframe 
+                                    key={activePlayer + players[activePlayer]}
                                     className="w-full h-full" 
                                     src={players[activePlayer]} 
                                     allowFullScreen 
+                                    allow="autoplay; encrypted-media; fullscreen"
                                     frameBorder="0"
-                                    onError={handlePlayerError}
                                 ></iframe>
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center space-y-4">
-                                    <div className="text-[10px] uppercase tracking-widest opacity-40 italic">Плеер недоступен, попробуйте Nebula Player.</div>
-                                    <button onClick={() => window.location.reload()} className="text-[9px] font-bold text-[#00ff88] border border-[#00ff88]/30 px-4 py-2 rounded-full hover:bg-[#00ff88]/10 transition-all">Переподключиться</button>
+                                <div className="w-full h-full flex flex-col items-center justify-center">
+                                    <div className="w-8 h-8 border-2 border-[#00ff88]/20 border-t-[#00ff88] rounded-full animate-spin mb-4"></div>
+                                    <div className="text-[10px] uppercase tracking-widest opacity-40">Загрузка...</div>
                                 </div>
                             )}
                         </div>
@@ -542,31 +469,25 @@
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                         <div className="glass-card p-6 md:p-8 rounded-3xl space-y-6">
-                            <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Доступные плееры</h4>
+                            <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Выбор плеера</h4>
                             <div className="flex flex-wrap gap-3 md:gap-4">
-                                {playerOrder.map(p => {
-                                    const isFailed = failedPlayers.has(p);
-                                    return (
-                                        <button 
-                                            key={p} 
-                                            disabled={isFailed}
-                                            onClick={() => setActivePlayer(p)} 
-                                            className={`flex-grow md:flex-none px-4 md:px-6 py-3 rounded-xl text-[9px] md:text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activePlayer === p ? 'bg-[#00ff88] text-black shadow-[0_0_20px_#00ff88]' : isFailed ? 'bg-red-500/10 text-red-500/40 cursor-not-allowed border border-red-500/20' : 'bg-white/5 opacity-40 hover:opacity-100 hover:bg-white/10'}`}
-                                        >
-                                            {p} {isFailed && '✕'}
-                                        </button>
-                                    );
-                                })}
+                                {['youtube', 'vk', 'nebula'].map(p => (
+                                    <button 
+                                        key={p} 
+                                        onClick={() => setActivePlayer(p)} 
+                                        className={`flex-grow md:flex-none px-4 md:px-6 py-3 rounded-xl text-[9px] md:text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activePlayer === p ? 'bg-[#00ff88] text-black shadow-[0_0_20px_#00ff88]' : 'bg-white/5 opacity-40 hover:opacity-100'}`}
+                                    >
+                                        {p}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                         <div className="glass-card p-6 md:p-8 rounded-3xl flex items-center justify-between border-l-4 border-[#00ff88]">
                             <div>
                                 <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">{activePlayer} Player</div>
-                                <div className="text-[9px] md:text-[10px] opacity-30 uppercase font-bold mt-1">
-                                    {failedPlayers.size > 0 ? `Переключено с ${failedPlayers.size} узлов` : 'Плеер загружен и активен'}
-                                </div>
+                                <div className="text-[9px] md:text-[10px] opacity-30 uppercase font-bold mt-1">Плеер работает, если ролик не загружается, попробуйте другой плеер.</div>
                             </div>
-                            <div className={`w-3 h-3 bg-[#00ff88] rounded-full ${!isLoading && 'animate-ping'}`}></div>
+                            <div className="w-3 h-3 bg-[#00ff88] rounded-full animate-pulse"></div>
                         </div>
                     </div>
                 </div>
