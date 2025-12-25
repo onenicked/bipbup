@@ -415,51 +415,60 @@
                 
                 const PROXIES = [
                     'https://api.allorigins.win/get?url=',
-                    'https://corsproxy.io/?',
-                    'https://thingproxy.freeboard.io/fetch/'
+                    'https://cors-anywhere.herokuapp.com/', 
+                    'https://api.codetabs.com/v1/proxy?quest='
                 ];
 
                 const fetchWithRetry = async (targetUrl) => {
                     for (let proxy of PROXIES) {
                         try {
                             const res = await fetch(proxy + encodeURIComponent(targetUrl));
-                            if (res.ok) return await res.json();
+                            if (res.ok) {
+                                const data = await res.json();
+                                return data.contents || data;
+                            }
                         } catch (e) { continue; }
                     }
-                    throw new Error("All proxies failed");
+                    return null;
                 };
 
                 const fetchMedia = async () => {
                     setIsLoading(true);
                     try {
-                        const ytData = await fetchWithRetry(`https://www.youtube.com/channel/${YT_CHANNEL_ID}/videos`);
-                        const ytMatch = ytData.contents.match(/\"videoId\":\"([^\"]+)\"/);
-                        if (ytMatch) {
-                            const url = `https://www.youtube.com/embed/${ytMatch[1]}`;
-                            setYtUrl(url);
-                            localStorage.setItem('cached_yt', url);
+                        const ytHtml = await fetchWithRetry(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`);
+                        
+                        if (ytHtml) {
+                            const videoIdMatch = ytHtml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+                            if (videoIdMatch) {
+                                const url = `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+                                setYtUrl(url);
+                                localStorage.setItem('cached_yt', url);
+                            }
+                        } else {
+                            const fallbackUrl = "https://www.youtube.com/embed?listType=user_uploads&list=UCjrmposCYp6sJsT2VybjH9A";
+                            setYtUrl(fallbackUrl);
                         }
 
-                        const vkData = await fetchWithRetry(`https://vk.com/${VK_GROUP_ID}/videos`);
-                        const html = vkData.contents;
-                        const videoMatch = html.match(/video(-?\d+)_(\d+)/);
-                        if (videoMatch) {
-                            const hashMatch = html.match(/\"hash\":\"([a-z0-9]+)\"/i) || html.match(/hash=([a-z0-9]+)/i);
-                            const url = `https://vkvideo.ru/video_ext.php?oid=${videoMatch[1]}&id=${videoMatch[2]}${hashMatch ? `&hash=${hashMatch[1]}` : ''}&hd=3`;
-                            setVkUrl(url);
-                            localStorage.setItem('cached_vk', url);
+                        const vkHtml = await fetchWithRetry(`https://vk.com/video/@${VK_GROUP_ID}`);
+                        if (vkHtml) {
+                            const videoMatch = vkHtml.match(/video(-?\d+)_(\d+)/);
+                            if (videoMatch) {
+                                const url = `https://vkvideo.ru/video_ext.php?oid=${videoMatch[1]}&id=${videoMatch[2]}&hd=3`;
+                                setVkUrl(url);
+                                localStorage.setItem('cached_vk', url);
+                            }
                         }
 
                         const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
                         const nebulaData = await nebulaRes.json();
-                        const videoAsset = nebulaData.assets.find(a => a.name.endsWith('.mp4'));
+                        const videoAsset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
                         if (videoAsset) {
                             const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(videoAsset.browser_download_url)}`;
                             setNebulaUrl(url);
                             localStorage.setItem('cached_nebula', url);
                         }
                     } catch (e) {
-                        console.error("Media parse error", e);
+                        setYtUrl("https://www.youtube.com/embed?listType=user_uploads&list=UCjrmposCYp6sJsT2VybjH9A");
                     } finally {
                         setIsLoading(false);
                     }
@@ -474,7 +483,11 @@
                     <div className="glass-card p-2 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#00ff88]/5 relative">
                         {isLoading && <div className="absolute inset-0 z-10 bg-black/50 backdrop-blur flex items-center justify-center text-[10px] uppercase tracking-widest font-black accent-text text-center px-4">Синхронизация...</div>}
                         <div className="aspect-video bg-black rounded-[1rem] md:rounded-[1.8rem] overflow-hidden">
-                            <iframe className="w-full h-full" src={players[activePlayer]} allowFullScreen frameBorder="0"></iframe>
+                            {players[activePlayer] ? (
+                                <iframe className="w-full h-full" src={players[activePlayer]} allowFullScreen frameBorder="0"></iframe>
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-xs opacity-20">Контент временно недоступен</div>
+                            )}
                         </div>
                     </div>
                     
