@@ -400,48 +400,81 @@
         };
 
         const Player = () => {
-            const [activePlayer, setActivePlayer] = useState('youtube');
+            const [activePlayer, setActivePlayer] = useState('nebula');
             const [vkUrl, setVkUrl] = useState(localStorage.getItem('cached_vk') || "");
             const [ytUrl, setYtUrl] = useState(localStorage.getItem('cached_yt') || "");
             const [nebulaUrl, setNebulaUrl] = useState(localStorage.getItem('cached_nebula') || "");
             const [isLoading, setIsLoading] = useState(false);
 
-            useEffect(() => {
-                const unsub = db.collection("settings").doc("latest_media")
-                    .onSnapshot(doc => {
-                        if (doc.exists && doc.data().vk) {
-                            setVkUrl(doc.data().vk);
-                            localStorage.setItem('cached_vk', doc.data().vk);
-                        }
-                    });
+useEffect(() => {
+    const cached = localStorage.getItem('cached_vk');
+    if (cached) setVkUrl(cached);
 
-                const fetchAutomated = async () => {
-                    setIsLoading(true);
-                    try {
-                        const ytRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCjrmposCYp6sJsT2VybjH9A')}`);
-                        const ytData = await ytRes.json();
-                        const ytId = ytData.contents?.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
-                        if (ytId) {
-                            const url = `https://www.youtube.com/embed/${ytId}?rel=0`;
-                            setYtUrl(url);
-                            localStorage.setItem('cached_yt', url);
-                        }
+    const VK_OWNER = '-209507445';
+    const vkVideosPage = `https://vk.com/videos${VK_OWNER}`;
+    const corsProxy = 'https://api.allorigins.win/get?url=';
 
-                        const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
-                        const nebulaData = await nebulaRes.json();
-                        const asset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
-                        if (asset) {
-                            const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(asset.browser_download_url)}`;
-                            setNebulaUrl(url);
-                            localStorage.setItem('cached_nebula', url);
-                        }
-                    } catch (e) {}
-                    setIsLoading(false);
-                };
+    const parseVkLatest = async () => {
+        try {
+            const res = await fetch(`${corsProxy}${encodeURIComponent(vkVideosPage)}`);
+            const json = await res.json();
+            const html = json.contents || '';
 
-                fetchAutomated();
-                return () => unsub();
-            }, []);
+            const m = html.match(/video(-?\d+)_([0-9]+)/);
+            if (m) {
+                const owner = m[1];
+                const id = m[2];
+
+                let hash = '';
+                const hashMatch = html.match(new RegExp(`video${owner}_${id}.*?hash:\s*'([a-f0-9]+)'`, 'i')) || html.match(/hash=([a-f0-9]{8,})/i);
+                if (hashMatch) hash = hashMatch[1];
+
+                let embed = `https://vk.com/video_ext.php?oid=${owner}&id=${id}${hash ? `&hash=${hash}` : ''}&hd=3`;
+                embed = embed.replace('vk.com/video_ext.php', 'vkvideo.ru/video_ext.php');
+
+                setVkUrl(embed);
+                localStorage.setItem('cached_vk', embed);
+                return;
+            }
+
+            const hrefMatch = html.match(/https?:\/\/vk\.com\/video-?\d+_\d+/i);
+            if (hrefMatch) {
+                setVkUrl(hrefMatch[0]);
+                localStorage.setItem('cached_vk', hrefMatch[0]);
+            }
+        } catch (e) {
+            console.error('VK parse failed', e);
+        }
+    };
+
+    parseVkLatest();
+
+    const fetchAutomated = async () => {
+        setIsLoading(true);
+        try {
+            const ytRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCjrmposCYp6sJsT2VybjH9A')}`);
+            const ytData = await ytRes.json();
+            const ytId = ytData.contents?.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
+            if (ytId) {
+                const url = `https://www.youtube.com/embed/${ytId}?rel=0`;
+                setYtUrl(url);
+                localStorage.setItem('cached_yt', url);
+            }
+
+            const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
+            const nebulaData = await nebulaRes.json();
+            const asset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
+            if (asset) {
+                const url = `https://xqr4d.github.io/Nebula/embed.html?v=${encodeURIComponent(asset.browser_download_url)}`;
+                setNebulaUrl(url);
+                localStorage.setItem('cached_nebula', url);
+            }
+        } catch (e) {}
+        setIsLoading(false);
+    };
+
+    fetchAutomated();
+}, []);
 
             const players = { youtube: ytUrl, vk: vkUrl, nebula: nebulaUrl };
 
