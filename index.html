@@ -519,7 +519,7 @@
                         {isLoading && (
                             <div className="absolute inset-0 z-10 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center rounded-[inherit] border border-[#00ff88]/20">
                                 <div className="w-10 h-10 border-2 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-4"></div>
-                                <div className="text-[10px] uppercase tracking-[0.4em] font-black accent-text">Поиск зеркал</div>
+                                <div className="text-[10px] uppercase tracking-[0.4em] font-black accent-text">Загрузка последних роликов</div>
                             </div>
                         )}
                         <div className="aspect-video bg-black rounded-[1rem] md:rounded-[1.8rem] overflow-hidden">
@@ -533,7 +533,7 @@
                                 ></iframe>
                             ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center space-y-4">
-                                    <div className="text-[10px] uppercase tracking-widest opacity-40 italic">Канал связи недоступен</div>
+                                    <div className="text-[10px] uppercase tracking-widest opacity-40 italic">Плеер недоступен (возможно вы слишком часто обновляли страницу, или произошла CORS ошибка.</div>
                                     <button onClick={() => window.location.reload()} className="text-[9px] font-bold text-[#00ff88] border border-[#00ff88]/30 px-4 py-2 rounded-full hover:bg-[#00ff88]/10 transition-all">Переподключиться</button>
                                 </div>
                             )}
@@ -542,7 +542,7 @@
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                         <div className="glass-card p-6 md:p-8 rounded-3xl space-y-6">
-                            <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Активные узлы</h4>
+                            <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Доступные плееры</h4>
                             <div className="flex flex-wrap gap-3 md:gap-4">
                                 {playerOrder.map(p => {
                                     const isFailed = failedPlayers.has(p);
@@ -561,9 +561,9 @@
                         </div>
                         <div className="glass-card p-6 md:p-8 rounded-3xl flex items-center justify-between border-l-4 border-[#00ff88]">
                             <div>
-                                <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">{activePlayer} Link</div>
+                                <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">{activePlayer} Player</div>
                                 <div className="text-[9px] md:text-[10px] opacity-30 uppercase font-bold mt-1">
-                                    {failedPlayers.size > 0 ? `Переключено с ${failedPlayers.size} узлов` : 'Резервные копии готовы'}
+                                    {failedPlayers.size > 0 ? `Переключено с ${failedPlayers.size} узлов` : 'Плеер загружен и активен'}
                                 </div>
                             </div>
                             <div className={`w-3 h-3 bg-[#00ff88] rounded-full ${!isLoading && 'animate-ping'}`}></div>
