@@ -285,10 +285,10 @@
                         {isMenuOpen && (
                             <div className="fixed inset-0 mobile-nav flex flex-col items-center justify-center gap-8 text-sm font-bold uppercase tracking-widest animate-in fade-in zoom-in duration-300">
                                 <button onClick={() => navigate('home')}>Главная</button>
-                                <button onClick={() => navigate('links')}>База данных</button>
-                                <button onClick={() => navigate('player')}>Медиа</button>
+                                <button onClick={() => navigate('links')}>База знаний</button>
+                                <button onClick={() => navigate('player')}>Плееры</button>
                                 {user ? (
-                                    <button onClick={() => navigate('lk')} className="accent-text">Cabinet</button>
+                                    <button onClick={() => navigate('lk')} className="accent-text">Аккаунт</button>
                                 ) : (
                                     <button onClick={() => navigate('login')} className="accent-text">Вход</button>
                                 )}
