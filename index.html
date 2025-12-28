@@ -312,10 +312,19 @@
             );
         };
 
-        const Home = ({ navigate }) => (
-            <div className="space-y-12 md:space-y-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                <section className="relative py-10 md:py-20 text-center md:text-left">
-                    <div className="max-w-3xl">
+        const Home = ({ navigate }) => {
+    const bannerConfig = {
+        enabled: true,                                      // false, чтобы полностью скрыть баннер
+        imageUrl: "image.jpg",  // Прямая ссылка на изображение баннера
+        linkUrl: "",                                        // Ссылка для кликабельности
+        altText: "Рекламный баннер"                         // Текст для атрибута alt
+    };
+
+    return (
+        <div className="space-y-12 md:space-y-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
+            <section className="relative py-10 md:py-20">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <div className="text-center md:text-left max-w-3xl md:max-w-none">
                         <h1 className="text-4xl md:text-7xl font-black mb-6 md:mb-8 leading-[1] md:leading-[0.9] tracking-tighter italic">
                             NEW ERA IN<br className="hidden md:block" /> <span className="accent-text">BLOGGER</span> PAGE
                         </h1>
@@ -327,24 +336,51 @@
                             <button onClick={() => navigate('player')} className="glass-card px-10 py-4 rounded-xl text-xs uppercase tracking-widest font-bold">Смотреть видео</button>
                         </div>
                     </div>
-                </section>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                    {[
-                        { t: 'База знаний', d: 'Полный реестр законодательных баз всех 23 серверов проекта + памятки от пользователей.' },
-                        { t: 'Fast API плееры', d: 'Смотрите новые видео без задержки, зависаний в разных плеерах.' },
-                        { t: 'Простая регистрация', d: 'Обновленный вход и регистрация, теперь быстрее и с большими вариацими входа.' }
-                    ].map((c, i) => (
-                        <div key={i} className="glass-card p-8 md:p-10 rounded-3xl">
-                            <div className="w-10 h-10 bg-[#00ff88]/10 rounded-lg flex items-center justify-center mb-6 text-[#00ff88] font-black">
-                                0{i + 1}
+
+                    {bannerConfig.enabled && (
+                        <div className="order-first md:order-last">
+                            <div className="w-full aspect-video md:aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl glass-card hover:border-accent transition-all duration-500">
+                                {bannerConfig.linkUrl ? (
+                                    <a href={bannerConfig.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                                        <img
+                                            src={bannerConfig.imageUrl}
+                                            alt={bannerConfig.altText}
+                                            className="w-full h-full object-cover"
+                                            loading="lazy"
+                                        />
+                                    </a>
+                                ) : (
+                                    <img
+                                        src={bannerConfig.imageUrl}
+                                        alt={bannerConfig.altText}
+                                        className="w-full h-full object-cover"
+                                        loading="lazy"
+                                    />
+                                )}
                             </div>
-                            <h3 className="text-lg md:text-xl font-bold mb-4 uppercase italic tracking-tighter">{c.t}</h3>
-                            <p className="text-xs md:text-sm opacity-40 leading-relaxed font-light">{c.d}</p>
                         </div>
-                    ))}
+                    )}
                 </div>
+            </section>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                {[
+                    { t: 'База знаний', d: 'Полный реестр законодательных баз всех 23 серверов проекта + памятки от пользователей.' },
+                    { t: 'Fast API плееры', d: 'Смотрите новые видео без задержки, зависаний в разных плеерах.' },
+                    { t: 'Простая регистрация', d: 'Обновленный вход и регистрация, теперь быстрее и с большими вариацими входа.' }
+                ].map((c, i) => (
+                    <div key={i} className="glass-card p-8 md:p-10 rounded-3xl">
+                        <div className="w-10 h-10 bg-[#00ff88]/10 rounded-lg flex items-center justify-center mb-6 text-[#00ff88] font-black">
+                            0{i + 1}
+                        </div>
+                        <h3 className="text-lg md:text-xl font-bold mb-4 uppercase italic tracking-tighter">{c.t}</h3>
+                        <p className="text-xs md:text-sm opacity-40 leading-relaxed font-light">{c.d}</p>
+                    </div>
+                ))}
             </div>
-        );
+        </div>
+    );
+};
 
         const Links = () => {
             const [pamyatki, setPamyatki] = useState([]);
