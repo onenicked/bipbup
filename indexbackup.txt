@@ -12,6 +12,7 @@
        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
        ym(99936739, "init", {
             clickmap:true,
             trackLinks:true,
@@ -35,6 +36,7 @@
         --card-bg: rgba(255, 255, 255, 0.03);
         --border: rgba(255, 255, 255, 0.08);
     }
+
     body { 
         background-color: var(--bg); 
         color: #e0e0e0; 
@@ -42,39 +44,46 @@
         background-image: radial-gradient(circle at 50% -20%, #1a2c23 0%, transparent 50%);
         overflow-x: hidden;
     }
+
     .glass-card {
         background: var(--card-bg);
         backdrop-filter: blur(12px);
         border: 1px solid var(--border);
         transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
+
     .glass-card:hover {
         border-color: var(--accent);
         background: rgba(0, 255, 136, 0.04);
         box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
     }
+
     .accent-text {
         color: var(--accent);
         text-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
     }
+
     .nav-link {
         position: relative;
         padding: 8px 0;
         transition: all 0.3s;
         cursor: pointer;
     }
+
     .nav-link.btn-login {
         border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 8px 20px;
         border-radius: 9999px;
         text-decoration: none !important;
     }
+
     .nav-link.btn-login:hover {
         background: var(--accent);
         color: #000;
         border-color: var(--accent);
         box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
     }
+
     .nav-link:not(.btn-login)::after {
         content: '';
         position: absolute;
@@ -87,8 +96,10 @@
         transform: translateX(-50%);
         box-shadow: 0 0 10px var(--accent);
     }
+
     .nav-link:not(.btn-login):hover::after { width: 100%; }
     .nav-link:not(.btn-login):hover { color: var(--accent); }
+
     .btn-primary {
         background: var(--accent);
         color: #000;
@@ -96,21 +107,25 @@
         transition: all 0.3s;
         box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
     }
+
     .btn-primary:hover {
         transform: scale(1.05);
         box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
     }
+
     .pamyatka-img-container {
         width: 100%;
         aspect-ratio: 16 / 9;
         overflow: hidden;
         border-radius: 12px;
     }
+
     .pamyatka-img-container img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
+
     input {
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -125,13 +140,16 @@
         display: block;
         transition: all 0.3s ease;
     }
+
     input:focus {
         border-color: var(--accent) !important;
         background: rgba(255, 255, 255, 0.08) !important;
     }
+
     input::placeholder {
         color: rgba(255, 255, 255, 0.4);
     }
+
     .error-page {
         display: flex;
         flex-direction: column;
@@ -140,11 +158,13 @@
         min-height: 60vh;
         text-align: center;
     }
+
     .mobile-nav {
         background: rgba(8, 9, 10, 0.98);
         backdrop-filter: blur(20px);
         z-index: 1000;
     }
+
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
@@ -154,8 +174,10 @@
 <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/99936739" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
+
         const LogoIcon = ({ className }) => (
             <img 
                 src="favicon.ico"
@@ -164,6 +186,7 @@
                 style={{ width: '32px', height: '32px', objectFit: 'contain'}} 
             />
         );
+
         const firebaseConfig = {
             apiKey: "AIzaSyBTwGTrPVPJQOGwOaFJwYUdZxQUpyAdGeo",
             authDomain: "bipbupweb.firebaseapp.com",
@@ -172,11 +195,14 @@
             messagingSenderId: "1059922568826",
             appId: "1:1059922568826:web:5bbf46006f29d96a273dc3"
         };
+
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
         const ADMINS = ["ncVuGk6MDjMZv4hhRtIdM27w8iq2", "stat8qyHflOz44oVUDPTGfMsetV2"];
-        const GTA5RP_SERVERS = [
+
+        const SERVERS = [
             { n: 1, name: "Downtown", id: "803" }, { n: 2, name: "Strawberry", id: "102" },
             { n: 3, name: "Vinewood", id: "170" }, { n: 4, name: "Blackberry", id: "262" },
             { n: 5, name: "Insquad", id: "336" }, { n: 6, name: "Sunrise", id: "412" },
@@ -190,25 +216,6 @@
             { n: 21, name: "Vespucci", id: "1912" }, { n: 22, name: "Milton", id: "1984" },
             { n: 23, name: "La Puerta", id: "2071" }
         ];
-        const MAJESTIC_SERVERS = [
-            { n: 1, name: "New York", id: "84" },
-            { n: 2, name: "Chicago", id: "255" },
-            { n: 3, name: "Detroit", id: "354" },
-            { n: 4, name: "San Francisco", id: "320" },
-            { n: 5, name: "Atlanta", id: "547" },
-            { n: 6, name: "San Diego", id: "558" },
-            { n: 7, name: "Los Angeles", id: "693" },
-            { n: 8, name: "Miami", id: "773" },
-            { n: 9, name: "Las Vegas", id: "820" },
-            { n: 10, name: "Washington", id: "894" },
-            { n: 11, name: "Dallas", id: "954" },
-            { n: 12, name: "Boston", id: "1017" },
-            { n: 13, name: "Houston", id: "1104" },
-            { n: 14, name: "Seattle", id: "1163" },
-            { n: 15, name: "Phoenix", id: "1213" },
-            { n: 16, name: "Denver", id: "1276" },
-            { n: 17, name: "Portland", id: "1338" }
-        ];
 
         const ErrorPage = ({ code, text, navigate }) => (
             <div className="error-page">
@@ -217,11 +224,13 @@
                 <button onClick={() => navigate('home')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">На главную</button>
             </div>
         );
+
         const App = () => {
             const [page, setPage] = useState('home');
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
             const [isMenuOpen, setIsMenuOpen] = useState(false);
+
             useEffect(() => {
                 const unsub = auth.onAuthStateChanged(u => {
                     setUser(u);
@@ -229,11 +238,13 @@
                 });
                 return () => unsub();
             }, []);
+
             const navigate = (p) => { 
                 window.scrollTo({top: 0, behavior: 'smooth'}); 
                 setPage(p); 
                 setIsMenuOpen(false);
             };
+
             const renderPage = () => {
                 if (loading) return <div className="flex justify-center py-20 accent-text">Загрузка...</div>;
                 
@@ -247,6 +258,7 @@
                     default: return <ErrorPage code="404" text="Страница не найдена" navigate={navigate} />;
                 }
             };
+
             return (
                 <div className="min-h-screen flex flex-col max-w-6xl mx-auto px-4 md:px-6">
                     <header className="flex justify-between items-center py-6 md:py-10">
@@ -254,6 +266,7 @@
                             <LogoIcon className="group-hover:rotate-12 transition-transform duration-500 rounded-lg" />
                             BIPBUP
                         </div>
+
                         <nav className="hidden md:flex gap-10 text-[10px] font-medium uppercase tracking-[0.2em] items-center">
                             <button onClick={() => navigate('home')} className="nav-link">Главная</button>
                             <button onClick={() => navigate('knowledge')} className="nav-link">База знаний</button>
@@ -265,10 +278,12 @@
                                 <button onClick={() => navigate('login')} className="nav-link btn-login">Вход</button>
                             )}
                         </nav>
+
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden z-[1100] relative w-8 h-8">
                             <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? 'rotate-45 top-4' : 'top-3'}`}></span>
                             <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? '-rotate-45 top-4' : 'top-5'}`}></span>
                         </button>
+
                         {isMenuOpen && (
                             <div className="fixed inset-0 mobile-nav flex flex-col items-center justify-center gap-8 text-sm font-bold uppercase tracking-widest animate-in fade-in zoom-in duration-300">
                                 <button onClick={() => navigate('home')}>Главная</button>
@@ -283,9 +298,11 @@
                             </div>
                         )}
                     </header>
+
                     <main className="flex-grow">
                         {renderPage()}
                     </main>
+
                     <footer className="py-10 md:py-20 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="text-[9px] md:text-[10px] opacity-30 uppercase tracking-[0.4em] text-center">© 2024-2026 https://github.com/XQR4D/bipbup</div>
                         <div className="flex gap-6 md:gap-8 opacity-40 text-[9px] uppercase font-bold tracking-widest">
@@ -298,6 +315,7 @@
                 </div>
             );
         };
+
         const Home = ({ navigate }) => {
             const bannerConfig = {
                 enabled: true,
@@ -305,6 +323,7 @@
                 linkUrl: "https://t.me/sellaccmarketbot",
                 altText: "Рекламный баннер"
             };
+
             return (
                 <div className="space-y-12 md:space-y-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
                     <section className="relative py-10 md:py-20">
@@ -321,6 +340,7 @@
                                     <button onClick={() => navigate('player')} className="glass-card px-10 py-4 rounded-xl text-xs uppercase tracking-widest font-bold">Смотреть видео</button>
                                 </div>
                             </div>
+
                             {bannerConfig.enabled && (
                                 <div className="order-first md:order-last">
                                     <div className="w-full aspect-video md:aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl glass-card hover:border-accent transition-all duration-500">
@@ -346,6 +366,7 @@
                             )}
                         </div>
                     </section>
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {[
                             { t: 'База знаний', d: 'Полный реестр законодательных баз всех 23 серверов проекта + памятки от пользователей.' },
@@ -364,9 +385,9 @@
                 </div>
             );
         };
+
         const KnowledgeBase = () => {
             const [pamyatki, setPamyatki] = useState([]);
-            const [project, setProject] = useState('gta5rp'); // 'gta5rp' or 'majestic'
 
             useEffect(() => {
                 const unsub = db.collection("pamyatki")
@@ -379,41 +400,23 @@
                 return () => unsub();
             }, []);
 
-            const currentServers = project === 'gta5rp' ? GTA5RP_SERVERS : MAJESTIC_SERVERS;
-            const forumUrl = project === 'gta5rp'
-                ? 'https://forum.gta5rp.com/forums/zakonodatelnaja-baza.'
-                : 'https://forum.majestic-rp.ru/forums/zakonodatelstvo.';
-
             return (
                 <div className="space-y-12 md:space-y-16 animate-in fade-in duration-500">
                     <div className="space-y-8 md:space-y-12">
                         <div className="text-center space-y-4">
                             <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Законодательство</h2>
-                            <p className="text-[10px] md:text-xs opacity-30 uppercase tracking-widest">Выберите проект и кликните на нужный сервер</p>
-                        </div>
-                        <div className="flex justify-center gap-4 mb-8">
-                            <button 
-                                onClick={() => setProject('gta5rp')} 
-                                className={`px-8 py-3 rounded-xl text-xs uppercase tracking-widest font-bold transition-all duration-300 ${project === 'gta5rp' ? 'btn-primary' : 'glass-card hover:border-accent'}`}
-                            >
-                                GTA5RP
-                            </button>
-                            <button 
-                                onClick={() => setProject('majestic')} 
-                                className={`px-8 py-3 rounded-xl text-xs uppercase tracking-widest font-bold transition-all duration-300 ${project === 'majestic' ? 'btn-primary' : 'glass-card hover:border-accent'}`}
-                            >
-                                Majestic RP
-                            </button>
+                            <p className="text-[10px] md:text-xs opacity-30 uppercase tracking-widest">Кликните на нужный сервер</p>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
-                            {currentServers.map(s => (
-                                <a key={s.n} href={`${forumUrl}${s.id}/`} target="_blank" className="glass-card p-4 md:p-6 rounded-2xl text-center group">
+                            {SERVERS.map(s => (
+                                <a key={s.n} href={`https://forum.gta5rp.com/forums/zakonodatelnaja-baza.${s.id}/`} target="_blank" className="glass-card p-4 md:p-6 rounded-2xl text-center group">
                                     <div className="text-[9px] md:text-[10px] opacity-20 mb-1 md:mb-2 font-bold group-hover:text-[#00ff88] transition">#{s.n}</div>
                                     <div className="text-[10px] md:text-xs font-bold uppercase tracking-tighter">{s.name}</div>
                                 </a>
                             ))}
                         </div>
                     </div>
+
                     <div className="space-y-8 md:space-y-12">
                         <div className="text-center space-y-4">
                             <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Памятки от игроков</h2>
@@ -436,6 +439,7 @@
                 </div>
             );
         };
+
         const SocialLinks = ({ navigate }) => {
             return (
                 <div className="max-w-4xl mx-auto py-12 md:py-20 animate-in fade-in duration-700">
@@ -443,6 +447,7 @@
                         <div className="text-center">
                             <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Актуальные ссылки</h2>
                         </div>
+
                         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                             <a href="https://vk.com/bipbupyoutube" target="_blank" className="hover:scale-110 transition-transform">
                                 <img style={{height: "60px"}} src="images/vk.webp" alt="VK" />
@@ -463,6 +468,7 @@
                                 <img style={{height: "60px"}} src="images/yt.png" alt="YouTube" />
                             </a>
                         </div>
+
                         <div className="space-y-8 text-center">
                             <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter">Коммерческие предложения</h3>
                             <a href="https://t.me/bipbupmanager" target="_blank">
@@ -473,16 +479,19 @@
                 </div>
             );
         };
+
         const Player = () => {
             const [activePlayer, setActivePlayer] = useState('nebula');
             const [vkUrl, setVkUrl] = useState(localStorage.getItem('cached_vk') || "");
             const [ytUrl, setYtUrl] = useState(localStorage.getItem('cached_yt') || "");
             const [nebulaUrl, setNebulaUrl] = useState(localStorage.getItem('cached_nebula') || "");
             const [isLoading, setIsLoading] = useState(false);
+
             useEffect(() => {
                 const videoUrl = "https://vkvideo.ru/video_ext.php?oid=-209507445&id=456239415&hash=fb3bf97a00fc47c4&hd=3";
                 setVkUrl(videoUrl);
                 localStorage.setItem('cached_vk', videoUrl);
+
                 const fetchAutomated = async () => {
                     setIsLoading(true);
                     try {
@@ -494,6 +503,7 @@
                             setYtUrl(url);
                             localStorage.setItem('cached_yt', url);
                         }
+
                         const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
                         const nebulaData = await nebulaRes.json();
                         const asset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
@@ -505,9 +515,12 @@
                     } catch (e) {}
                     setIsLoading(false);
                 };
+
                 fetchAutomated();
             }, []);
+
             const players = { youtube: ytUrl, vk: vkUrl, nebula: nebulaUrl };
+
             return (
                 <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 animate-in fade-in duration-700">
                     <div className="glass-card p-2 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#00ff88]/5 relative">
@@ -556,18 +569,22 @@
                 </div>
             );
         };
+
         const Login = ({ navigate }) => {
+            // (остальной код компонента Login без изменений)
             const [mode, setMode] = useState('login');
             const [email, setEmail] = useState('');
             const [pass, setPass] = useState('');
             const [resetSent, setResetSent] = useState(false);
             const recaptchaRef = useRef(null);
+
             useEffect(() => {
                 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
                     'size': 'invisible',
                     'callback': (response) => { }
                 });
             }, []);
+
             const verifyCaptcha = async () => {
                 try {
                     return await window.recaptchaVerifier.verify();
@@ -579,27 +596,34 @@
                     return null;
                 }
             };
+
             const handleAuth = async (e) => {
                 e.preventDefault();
                 const token = await verifyCaptcha();
                 if (!token) return;
+
                 const promise = mode === 'login' 
                     ? auth.signInWithEmailAndPassword(email, pass) 
                     : auth.createUserWithEmailAndPassword(email, pass);
                 promise.then(() => navigate('lk')).catch(e => alert(e.message));
             };
+
             const handleGoogleLogin = async () => {
                 const token = await verifyCaptcha();
                 if (!token) return;
+
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).then(() => navigate('lk')).catch(e => alert(e.message));
             };
+
             const handleGithubLogin = async () => {
                 const token = await verifyCaptcha();
                 if (!token) return;
+
                 const provider = new firebase.auth.GithubAuthProvider();
                 auth.signInWithPopup(provider).then(() => navigate('lk')).catch(e => alert(e.message));
             };
+
             const handleReset = (e) => {
                 e.preventDefault();
                 auth.sendPasswordResetEmail(email).then(() => {
@@ -607,6 +631,7 @@
                     setTimeout(() => setMode('login'), 3000);
                 }).catch(e => alert(e.message));
             };
+
             return (
                 <div className="max-w-md mx-auto py-6 md:py-10">
                     <div id="recaptcha-container"></div>
@@ -632,12 +657,14 @@
                                     <button className="btn-primary w-full py-5 rounded-2xl uppercase text-[10px] tracking-[0.2em]">Продолжить</button>
                                     <button type="button" onClick={() => setMode('reset')} className="w-full text-[9px] opacity-40 uppercase hover:opacity-100 transition">Забыли пароль?</button>
                                 </form>
+
                                 <div className="relative py-2">
                                     <div className="absolute inset-0 flex items-center"><div></div></div>
                                     <div className="relative flex justify-center">
                                         <span className="bg-[#0b0c0d] px-4 text-[8px] uppercase tracking-[0.3em] opacity-40 font-bold">Войти с помощью</span>
                                     </div>
                                 </div>
+
                                 <div className="grid grid-cols-2 gap-4">
                                     <button onClick={handleGoogleLogin} className="glass-card group flex flex-col items-center justify-center py-5 rounded-2xl transition-all duration-300 hover:border-[#00ff88]/50">
                                         <svg className="w-6 h-6 mb-2 transition-all duration-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -668,13 +695,16 @@
                 </div>
             );
         };
+
         const Profile = ({ user, navigate }) => {
+            // (остальной код компонента Profile без изменений — сохранён полностью из исходного файла)
             const [isUploading, setIsUploading] = useState(false);
             const [avatar, setAvatar] = useState(user?.photoURL);
             const [moderationCount, setModerationCount] = useState(0);
             const [showModal, setShowModal] = useState(null); 
             const [pendingPamyatki, setPendingPamyatki] = useState([]);
             const fileInput = useRef();
+
             useEffect(() => {
                 const unsub = db.collection("pamyatki")
                     .where("status", "==", "pending")
@@ -684,6 +714,7 @@
                     });
                 return () => unsub();
             }, []);
+
             const uploadAvatar = async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -702,6 +733,7 @@
                     alert("Аватар обновлен!");
                 } catch (err) { alert("Ошибка загрузки"); } finally { setIsUploading(false); }
             };
+
             const submitPamyatka = async (e) => {
                 e.preventDefault();
                 const title = e.target.p_title.value.trim();
@@ -720,6 +752,7 @@
                     setShowModal(null);
                 } catch (err) { alert(err.message); }
             };
+
             const handleMod = async (id, status) => {
                 if(status === 'approved') {
                     await db.collection("pamyatki").doc(id).update({ status: "approved" });
@@ -731,6 +764,7 @@
                     }
                 }
             };
+
             const changeNickname = async (e) => {
                 e.preventDefault();
                 const newName = e.target.new_nickname.value.trim();
@@ -741,6 +775,7 @@
                     window.location.reload();
                 } catch (e) { alert(e.message); }
             };
+
             const changeEmail = async (e) => {
                 e.preventDefault();
                 const newEmail = e.target.new_email.value.trim().toLowerCase();
@@ -753,6 +788,7 @@
                     alert("Проверьте новый email! Перейдите по ссылке в письме.");
                 } catch (e) { alert(e.message); }
             };
+
             const changePassword = async (e) => {
                 e.preventDefault();
                 const cur = e.target.current_password.value;
@@ -768,6 +804,7 @@
                     e.target.reset();
                 } catch (e) { alert(e.message); }
             };
+
             return (
                 <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700">
                     <div className="glass-card p-8 md:p-12 rounded-[3rem] flex flex-col md:flex-row items-center gap-10">
@@ -802,6 +839,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8">
                             <h3 className="text-lg font-black italic uppercase tracking-tighter accent-text">Настройки профиля</h3>
@@ -811,6 +849,7 @@
                                 <input name="new_nickname" type="text" placeholder="Новый никнейм" defaultValue={user.displayName} />
                                 <button className="btn-primary w-full py-4 rounded-xl text-[9px] uppercase tracking-widest">Обновить имя</button>
                             </form>
+
                             <form onSubmit={changeEmail} className="space-y-4 pt-4">
                                 <label className="text-[9px] uppercase opacity-30 font-bold tracking-[0.2em]">Сменить Email</label>
                                 <input name="new_email" type="email" placeholder="Новый email" required />
@@ -818,6 +857,7 @@
                                 <button className="btn-primary w-full py-4 rounded-xl text-[9px] uppercase tracking-widest">Сменить почту</button>
                             </form>
                         </div>
+
                         <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8">
                             <h3 className="text-lg font-black italic uppercase tracking-tighter accent-text">Безопасность</h3>
                             <form onSubmit={changePassword} className="space-y-4">
@@ -829,6 +869,7 @@
                             </form>
                         </div>
                     </div>
+
                     {showModal === 'add' && (
                         <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
                             <div className="glass-card w-full max-w-lg p-8 md:p-10 rounded-[2.5rem] space-y-6 relative border-t-2 border-[#00ff88]/20 animate-in zoom-in duration-300">
@@ -845,6 +886,7 @@
                             </div>
                         </div>
                     )}
+
                     {showModal === 'mod' && (
                         <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
                             <div className="glass-card w-full max-w-2xl max-h-[80vh] overflow-y-auto p-8 md:p-10 rounded-[2.5rem] space-y-6 relative border-t-2 border-[#00ff88]/20 animate-in zoom-in duration-300">
@@ -875,6 +917,7 @@
                 </div>
             );
         };
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
