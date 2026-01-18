@@ -6,6 +6,15 @@
     <title>BIPBUP</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://mc.yandex.ru">
+
     <script type="text/javascript" >
        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
        m[i].l=1*new Date();
@@ -19,15 +28,20 @@
             webvisor:true
        });
     </script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+    
     <style>
     :root {
         --accent: #00ff88;
@@ -35,18 +49,29 @@
         --card-bg: rgba(255, 255, 255, 0.03);
         --border: rgba(255, 255, 255, 0.08);
     }
-    body { 
-        background-color: var(--bg); 
-        color: #e0e0e0; 
+    body {
+        background-color: var(--bg);
+        color: #e0e0e0;
         font-family: 'Unbounded', sans-serif;
-        background-image: radial-gradient(circle at 50% -20%, #1a2c23 0%, transparent 50%);
         overflow-x: hidden;
+        margin: 0;
+    }
+    /* Canvas на весь фон */
+    #background-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
     }
     .glass-card {
         background: var(--card-bg);
         backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: 1px solid var(--border);
         transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        will-change: transform, box-shadow;
     }
     .glass-card:hover {
         border-color: var(--accent);
@@ -152,8 +177,10 @@
     </style>
 </head>
 <body>
+    <canvas id="background-canvas"></canvas>
     <noscript><div><img src="https://mc.yandex.ru/watch/99936739" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
         const LogoIcon = ({ className }) => (
@@ -217,11 +244,240 @@
                 <button onClick={() => navigate('home')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">На главную</button>
             </div>
         );
+
+        // --- НОВЫЕ КОМПОНЕНТЫ ИНСТРУМЕНТОВ ---
+
+        const ToolsPage = () => {
+            const [activeTool, setActiveTool] = useState('gen');
+
+            const tools = [
+                { id: 'gen', name: 'RP Никнейм' },
+                { id: 'calc', name: 'Калькулятор' },
+                { id: 'game', name: 'Проверка реакции' },
+            ];
+
+            return (
+                <div className="max-w-4xl mx-auto py-8 md:py-16 space-y-8 animate-in fade-in duration-500">
+                    <div className="flex justify-center flex-wrap gap-4">
+                        {tools.map(t => (
+                            <button 
+                                key={t.id}
+                                onClick={() => setActiveTool(t.id)}
+                                className={`px-6 py-3 rounded-xl text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activeTool === t.id ? 'btn-primary' : 'glass-card hover:border-[#00ff88]'}`}
+                            >
+                                {t.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="glass-card p-6 md:p-12 rounded-[2.5rem] relative overflow-hidden min-h-[400px]">
+                        {activeTool === 'gen' && <NicknameGenerator />}
+                        {activeTool === 'calc' && <GrindCalculator />}
+                        {activeTool === 'game' && <QueueKiller />}
+                    </div>
+                </div>
+            );
+        };
+
+        const NicknameGenerator = () => {
+            const [gender, setGender] = useState('male');
+            const [nation, setNation] = useState('usa');
+            const [result, setResult] = useState('');
+
+            const data = {
+                usa: {
+                    male: ['James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Charles', 'Daniel', 'Matthew'],
+                    female: ['Mary', 'Patricia', 'Jennifer', 'Linda', 'Elizabeth', 'Barbara', 'Susan', 'Jessica', 'Sarah', 'Karen', 'Nancy', 'Lisa'],
+                    last: ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez']
+                },
+                rus: {
+                    male: ['Ivan', 'Dmitry', 'Sergey', 'Vladimir', 'Alexander', 'Maxim', 'Andrey', 'Mikhail', 'Nikolai', 'Pavel', 'Egor', 'Artem'],
+                    female: ['Anna', 'Maria', 'Elena', 'Olga', 'Tatiana', 'Natalia', 'Ekaterina', 'Svetlana', 'Irina', 'Anastasia', 'Daria', 'Polina'],
+                    last: ['Ivanov', 'Smirnov', 'Kuznetsov', 'Popov', 'Sokolov', 'Lebedev', 'Kozlov', 'Novikov', 'Morozov', 'Petrov', 'Volkov', 'Solovyov']
+                },
+                ita: {
+                    male: ['Antonio', 'Giuseppe', 'Francesco', 'Leonardo', 'Alessandro', 'Marco', 'Lorenzo', 'Matteo', 'Gabriele', 'Davide', 'Riccardo', 'Federico'],
+                    female: ['Sofia', 'Giulia', 'Aurora', 'Alice', 'Ginevra', 'Emma', 'Giorgia', 'Greta', 'Martina', 'Beatrice', 'Chiara', 'Sara'],
+                    last: ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo']
+                },
+                jap: {
+                    male: ['Haruto', 'Riku', 'Sora', 'Ren', 'Hiroto', 'Yuto', 'Kaito', 'Minato', 'Sota', 'Itsuki', 'Kosuke', 'Kenji'],
+                    female: ['Himari', 'Hina', 'Yua', 'Sakura', 'Akari', 'Yui', 'Aoi', 'Rio', 'Kanna', 'Koharu', 'Misaki', 'Nanami'],
+                    last: ['Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Watanabe', 'Ito', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamada']
+                },
+                mex: {
+                    male: ['Mateo', 'Santiago', 'Sebastian', 'Leonardo', 'Matias', 'Emiliano', 'Diego', 'Daniel', 'Miguel', 'Jose', 'Carlos', 'Luis'],
+                    female: ['Sofia', 'Maria', 'Valentina', 'Isabella', 'Camila', 'Valeria', 'Ximena', 'Luciana', 'Elena', 'Victoria', 'Martina', 'Lucia'],
+                    last: ['Hernandez', 'Garcia', 'Martinez', 'Gonzalez', 'Lopez', 'Rodriguez', 'Perez', 'Sanchez', 'Ramirez', 'Flores', 'Gomez', 'Torres']
+                }
+            };
+
+            const generate = () => {
+                const first = data[nation][gender][Math.floor(Math.random() * data[nation][gender].length)];
+                const last = data[nation].last[Math.floor(Math.random() * data[nation].last.length)];
+                setResult(`${first}_${last}`);
+            };
+
+            const copyToClipboard = () => {
+                if(result) {
+                    navigator.clipboard.writeText(result);
+                    alert('Никнейм скопирован!');
+                }
+            };
+
+            return (
+                <div className="text-center space-y-8 animate-in fade-in duration-300">
+                    <h3 className="text-2xl font-black italic uppercase tracking-tighter">Генератор Ников</h3>
+                    <div className="flex justify-center gap-4">
+                        <button onClick={() => setGender('male')} className={`p-4 rounded-xl border transition-all ${gender === 'male' ? 'border-[#00ff88] bg-[#00ff88]/10 text-[#00ff88]' : 'border-white/10 opacity-50'}`}>МУЖСКОЙ</button>
+                        <button onClick={() => setGender('female')} className={`p-4 rounded-xl border transition-all ${gender === 'female' ? 'border-[#00ff88] bg-[#00ff88]/10 text-[#00ff88]' : 'border-white/10 opacity-50'}`}>ЖЕНСКИЙ</button>
+                    </div>
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
+                        {[
+                            {id: 'usa', t: 'USA'},
+                            {id: 'rus', t: 'RUS'},
+                            {id: 'ita', t: 'ITA'},
+                            {id: 'jap', t: 'JAP'},
+                            {id: 'mex', t: 'MEX'}
+                        ].map(n => (
+                            <button 
+                                key={n.id} 
+                                onClick={() => setNation(n.id)}
+                                className={`text-[9px] uppercase font-bold py-3 rounded-lg transition-all ${nation === n.id ? 'bg-[#00ff88] text-black shadow-[0_0_15px_#00ff88]' : 'bg-white/5 hover:bg-white/10'}`}
+                            >
+                                {n.t}
+                            </button>
+                        ))}
+                    </div>
+                    <div onClick={copyToClipboard} className="cursor-pointer group py-8">
+                        <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-[#00ff88] tracking-wider min-h-[60px] group-hover:scale-110 transition-transform">
+                            {result || "..."}
+                        </div>
+                        <p className="text-[8px] opacity-0 group-hover:opacity-50 mt-2 uppercase tracking-widest">Нажми чтобы скопировать</p>
+                    </div>
+                    <button onClick={generate} className="btn-primary w-full py-5 rounded-2xl text-xs uppercase tracking-[0.3em] font-black">Сгенерировать</button>
+                </div>
+            );
+        };
+
+        const GrindCalculator = () => {
+            const [rate, setRate] = useState('');
+            const [hours, setHours] = useState('');
+            const [tax, setTax] = useState(0);
+            const [vip, setVip] = useState(0);
+            const [total, setTotal] = useState(0);
+
+            useEffect(() => {
+                const r = parseFloat(rate) || 0;
+                const h = parseFloat(hours) || 0;
+                let res = r * h;
+                if(vip > 0) res = res * (1 + vip/100);
+                if(tax > 0) res = res * (1 - tax/100);
+                setTotal(Math.floor(res));
+            }, [rate, hours, tax, vip]);
+
+            return (
+                <div className="space-y-8 animate-in fade-in duration-300">
+                    <h3 className="text-2xl font-black italic uppercase tracking-tighter text-center">Калькулятор заработка</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-[9px] uppercase opacity-40 font-bold tracking-widest">Зарплата в час / за рейс ($)</label>
+                            <input type="number" value={rate} onChange={e => setRate(e.target.value)} placeholder="Например: 15000" className="text-xl font-bold" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[9px] uppercase opacity-40 font-bold tracking-widest">Количество часов / рейсов</label>
+                            <input type="number" value={hours} onChange={e => setHours(e.target.value)} placeholder="Например: 4" className="text-xl font-bold" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                         <div className="space-y-2">
+                            <label className="text-[9px] uppercase opacity-40 font-bold tracking-widest">VIP Бонус (%)</label>
+                            <select value={vip} onChange={e => setVip(Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white outline-none">
+                                <option value="0">Нет VIP</option>
+                                <option value="15">Silver (+15%)</option>
+                                <option value="25">Gold (+25%)</option>
+                                <option value="35">Platinum (+35%)</option>
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                             <label className="text-[9px] uppercase opacity-40 font-bold tracking-widest">Налог (%)</label>
+                             <input type="number" value={tax} onChange={e => setTax(e.target.value)} placeholder="0" />
+                        </div>
+                    </div>
+                    <div className="glass-card bg-[#00ff88]/10 border-[#00ff88]/30 p-8 rounded-2xl text-center space-y-2">
+                        <div className="text-[10px] uppercase font-bold tracking-widest opacity-60">Итоговый заработок</div>
+                        <div className="text-4xl md:text-5xl font-black accent-text">${total.toLocaleString()}</div>
+                    </div>
+                </div>
+            );
+        };
+
+        const QueueKiller = () => {
+            const [state, setState] = useState('waiting'); // waiting, ready, now, result
+            const [startTime, setStartTime] = useState(0);
+            const [score, setScore] = useState(null);
+            const timeoutRef = useRef(null);
+
+            const start = () => {
+                setState('ready');
+                setScore(null);
+                const randomTime = Math.floor(Math.random() * 3000) + 1000;
+                timeoutRef.current = setTimeout(() => {
+                    setState('now');
+                    setStartTime(Date.now());
+                }, randomTime);
+            };
+
+            const handleClick = () => {
+                if (state === 'ready') {
+                    clearTimeout(timeoutRef.current);
+                    setState('waiting');
+                    alert("Слишком рано! Попробуй еще раз.");
+                } else if (state === 'now') {
+                    const time = Date.now() - startTime;
+                    setScore(time);
+                    setState('result');
+                } else {
+                    start();
+                }
+            };
+
+            return (
+                <div className="h-full flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in duration-300">
+                    <h3 className="text-2xl font-black italic uppercase tracking-tighter">Проверка реакции</h3>
+                    <p className="text-xs opacity-40 max-w-sm">Жди зеленого экрана.</p>
+                    <p className="text-xs opacity-40 max-w-sm">Как только цвет изменится — кликай как можно быстрее.</p>
+                    
+                    <div 
+                        onClick={handleClick}
+                        className={`w-full max-w-md aspect-video rounded-3xl flex items-center justify-center cursor-pointer transition-all duration-100 shadow-2xl select-none
+                            ${state === 'waiting' || state === 'result' ? 'bg-white/5 hover:border-[#00ff88] border-2 border-transparent' : ''}
+                            ${state === 'ready' ? 'bg-red-500/80 shadow-[0_0_50px_red]' : ''}
+                            ${state === 'now' ? 'bg-[#00ff88] shadow-[0_0_100px_#00ff88] scale-105' : ''}
+                        `}
+                    >
+                        {state === 'waiting' && <span className="text-xl font-black uppercase tracking-widest">Начать</span>}
+                        {state === 'ready' && <span className="text-xl font-black uppercase tracking-widest">ЖДИ...</span>}
+                        {state === 'now' && <span className="text-4xl font-black uppercase tracking-widest text-black">ЖМИ!</span>}
+                        {state === 'result' && (
+                            <div className="space-y-2">
+                                <div className="text-6xl font-black accent-text">{score} ms</div>
+                                <div className="text-xs opacity-50 uppercase tracking-widest">Кликни чтобы повторить</div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
         const App = () => {
-            const [page, setPage] = useState('home');
+            const [page, setPage] = useState(() => {
+                return localStorage.getItem('bipbup_last_page') || 'home';
+            });
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
             const [isMenuOpen, setIsMenuOpen] = useState(false);
+            
             useEffect(() => {
                 const unsub = auth.onAuthStateChanged(u => {
                     setUser(u);
@@ -229,19 +485,25 @@
                 });
                 return () => unsub();
             }, []);
+            
             const navigate = (p) => { 
                 window.scrollTo({top: 0, behavior: 'smooth'}); 
-                setPage(p); 
+                setPage(p);
+                localStorage.setItem('bipbup_last_page', p);
                 setIsMenuOpen(false);
+                // СОБЫТИЕ ДЛЯ АНИМАЦИИ: Сообщаем фону, что страница сменилась
+                window.dispatchEvent(new Event('page-change'));
             };
+            
             const renderPage = () => {
-                if (loading) return <div className="flex justify-center py-20 accent-text">Загрузка...</div>;
+                if (loading) return <div className="flex justify-center py-20 accent-text animate-pulse">Загрузка данных...</div>;
                 
                 switch(page) {
                     case 'home': return <Home navigate={navigate} />;
                     case 'knowledge': return <KnowledgeBase navigate={navigate} />;
                     case 'social': return <SocialLinks navigate={navigate} />;
                     case 'player': return <Player />;
+                    case 'tools': return <ToolsPage />;
                     case 'login': return <Login navigate={navigate} />;
                     case 'lk': return user ? <Profile user={user} navigate={navigate} /> : <Login navigate={navigate} />;
                     default: return <ErrorPage code="404" text="Страница не найдена" navigate={navigate} />;
@@ -251,16 +513,16 @@
                 <div className="min-h-screen flex flex-col max-w-6xl mx-auto px-4 md:px-6">
                     <header className="flex justify-between items-center py-6 md:py-10">
                         <div onClick={() => navigate('home')} className="z-[1100] text-xl md:text-2xl font-black tracking-tighter cursor-pointer flex items-center gap-3 group">
-                            <LogoIcon className="group-hover:rotate-12 transition-transform duration-500 rounded-lg" />
                             BIPBUP
                         </div>
                         <nav className="hidden md:flex gap-10 text-[10px] font-medium uppercase tracking-[0.2em] items-center">
-                            <button onClick={() => navigate('home')} className="nav-link">Главная</button>
-                            <button onClick={() => navigate('knowledge')} className="nav-link">База знаний</button>
-                            <button onClick={() => navigate('social')} className="nav-link">Ссылки</button>
-                            <button onClick={() => navigate('player')} className="nav-link">Плееры</button>
+                            <button onClick={() => navigate('home')} className={`nav-link ${page === 'home' ? 'text-[#00ff88]' : ''}`}>Главная</button>
+                            <button onClick={() => navigate('knowledge')} className={`nav-link ${page === 'knowledge' ? 'text-[#00ff88]' : ''}`}>База знаний</button>
+                            <button onClick={() => navigate('tools')} className={`nav-link ${page === 'tools' ? 'text-[#00ff88]' : ''}`}>Инструменты</button>
+                            <button onClick={() => navigate('social')} className={`nav-link ${page === 'social' ? 'text-[#00ff88]' : ''}`}>Ссылки</button>
+                            <button onClick={() => navigate('player')} className={`nav-link ${page === 'player' ? 'text-[#00ff88]' : ''}`}>Плееры</button>
                             {user ? (
-                                <button onClick={() => navigate('lk')} className="nav-link btn-login font-bold">Аккаунт</button>
+                                <button onClick={() => navigate('lk')} className={`nav-link btn-login font-bold ${page === 'lk' ? 'bg-[#00ff88] text-black' : ''}`}>Аккаунт</button>
                             ) : (
                                 <button onClick={() => navigate('login')} className="nav-link btn-login">Вход</button>
                             )}
@@ -271,12 +533,13 @@
                         </button>
                         {isMenuOpen && (
                             <div className="fixed inset-0 mobile-nav flex flex-col items-center justify-center gap-8 text-sm font-bold uppercase tracking-widest animate-in fade-in zoom-in duration-300">
-                                <button onClick={() => navigate('home')}>Главная</button>
-                                <button onClick={() => navigate('knowledge')}>База знаний</button>
-                                <button onClick={() => navigate('social')}>Ссылки</button>
-                                <button onClick={() => navigate('player')}>Плееры</button>
+                                <button onClick={() => navigate('home')} className={page === 'home' ? 'accent-text' : ''}>Главная</button>
+                                <button onClick={() => navigate('knowledge')} className={page === 'knowledge' ? 'accent-text' : ''}>База знаний</button>
+                                <button onClick={() => navigate('tools')} className={page === 'tools' ? 'accent-text' : ''}>Инструменты</button>
+                                <button onClick={() => navigate('social')} className={page === 'social' ? 'accent-text' : ''}>Ссылки</button>
+                                <button onClick={() => navigate('player')} className={page === 'player' ? 'accent-text' : ''}>Плееры</button>
                                 {user ? (
-                                    <button onClick={() => navigate('lk')} className="accent-text">Аккаунт</button>
+                                    <button onClick={() => navigate('lk')} className="accent-text border border-[#00ff88] px-6 py-2 rounded-full">Аккаунт</button>
                                 ) : (
                                     <button onClick={() => navigate('login')} className="accent-text">Вход</button>
                                 )}
@@ -287,7 +550,7 @@
                         {renderPage()}
                     </main>
                     <footer className="py-10 md:py-20 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="text-[9px] md:text-[10px] opacity-30 uppercase tracking-[0.4em] text-center">© 2024-2026 https://github.com/XQR4D/bipbup</div>
+                        <div className="text-[9px] md:text-[10px] opacity-30 uppercase tracking-[0.4em] text-center">© 2024-2026 xqr4d.github.io/bipbup</div>
                         <div className="flex gap-6 md:gap-8 opacity-40 text-[9px] uppercase font-bold tracking-widest">
                             <a href="https://policies.google.com/privacy?hl=en-US" className="hover:text-[#00ff88] transition">Privacy</a>
                             <a href="https://policies.google.com/terms?hl=en-US" className="hover:text-[#00ff88] transition">Terms</a>
@@ -311,11 +574,8 @@
                         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                             <div className="text-center md:text-left max-w-3xl md:max-w-none">
                                 <h1 className="text-4xl md:text-7xl font-black mb-6 md:mb-8 leading-[1] md:leading-[0.9] tracking-tighter italic">
-                                    NEW ERA IN<br className="hidden md:block" /> <span className="accent-text">BLOGGER</span> PAGE
+                                    /PROMO<br className="hidden md:block" /> <span className="accent-text">BIPBUP</span> 12500$ + 10 дней VIP
                                 </h1>
-                                <p className="text-base md:text-lg opacity-40 max-w-xl mx-auto md:mx-0 leading-relaxed font-light mb-8 md:mb-10">
-                                    Обновленный дизайн, быстрые плееры, удобный интерфейс, памятки от пользователей.
-                                </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                                     <button onClick={() => navigate('knowledge')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">Перейти к памяткам</button>
                                     <button onClick={() => navigate('player')} className="glass-card px-10 py-4 rounded-xl text-xs uppercase tracking-widest font-bold">Смотреть видео</button>
@@ -348,7 +608,7 @@
                     </section>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {[
-                            { t: 'База знаний', d: 'Полный реестр законодательных баз всех 23 серверов проекта + памятки от пользователей.' },
+                            { t: 'База знаний', d: 'Полный реестр законодательных баз таких проектов как: Majestic RP, GTA 5 RP + кастомные памятки от пользователей.' },
                             { t: 'Fast API плееры', d: 'Смотрите новые видео без задержки, зависаний в разных плеерах.' },
                             { t: 'Простая регистрация', d: 'Обновленный вход и регистрация, теперь быстрее и с большими вариацими входа.' }
                         ].map((c, i) => (
@@ -545,12 +805,13 @@
                                 ))}
                             </div>
                         </div>
-                        <div className="glass-card p-6 md:p-8 rounded-3xl flex items-center justify-between border-l-4 border-[#00ff88]">
+                        <div className="glass-card p-6 md:p-8 rounded-3xl flex items-center justify-between">
                             <div>
-                                <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">{activePlayer} Player</div>
-                                <div className="text-[9px] md:text-[10px] opacity-30 uppercase font-bold mt-1">Плеер работает, если ролик не загружается, попробуйте другой плеер.</div>
+                                <a href="https://t.me/bipbupvods" target="_blank" className="hover:scale-110 transition-transform">
+                                <img style={{height: "60px"}} src="images/tg.png" alt="Telegram канал" />
+                                </a>
+                                <div className="text-[#00ff88] text-lg md:text-xl font-black italic uppercase tracking-tighter">Ролики оффлайн</div>
                             </div>
-                            <div className="w-3 h-3 bg-[#00ff88] rounded-full animate-pulse"></div>
                         </div>
                     </div>
                 </div>
@@ -877,6 +1138,187 @@
         };
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+    </script>
+
+    <!-- Скрипт "Нейронная Сетка / Plexus" с реакцией на скролл и клики -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('background-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let particles = [];
+            const particleCount = 100; // Количество узлов
+            const connectionDistance = 150; // Дистанция соединения
+            const mouseDistance = 200; // Радиус реакции на мышь
+
+            // Переменные состояния анимации
+            let scrollSpeed = 0;
+            let targetScrollSpeed = 0;
+            let warpFactor = 0; // Для эффекта "прыжка" при смене вкладок
+            
+            // Мышь
+            let mouse = { x: null, y: null };
+
+            // Инициализация Canvas
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                initParticles();
+            }
+            window.addEventListener('resize', resize);
+
+            // Получаем цвет акцента
+            const style = getComputedStyle(document.body);
+            const accentHex = style.getPropertyValue('--accent').trim() || '#00ff88';
+            
+            // Преобразование HEX в RGB для прозрачности
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.replace('#', ''), 16);
+                return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+            }
+            const accentRgb = hexToRgb(accentHex);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                }
+
+                update() {
+                    // Базовое движение
+                    // При варпе ускоряем движение по Y
+                    let speedMult = 1 + warpFactor * 50; 
+                    
+                    this.x += this.vx * (1 + warpFactor * 2);
+                    this.y += this.vy + (scrollSpeed * 0.5) + (warpFactor * 10); 
+
+                    // Отталкивание от мыши
+                    if (mouse.x != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouseDistance) {
+                            const forceDirectionX = dx / distance;
+                            const forceDirectionY = dy / distance;
+                            const force = (mouseDistance - distance) / mouseDistance;
+                            const directionX = forceDirectionX * force * 2;
+                            const directionY = forceDirectionY * force * 2;
+                            this.x -= directionX;
+                            this.y -= directionY;
+                        }
+                    }
+
+                    // Границы экрана (бесшовность)
+                    if (this.x < 0) this.x = width;
+                    else if (this.x > width) this.x = 0;
+                    
+                    if (this.y < 0) this.y = height;
+                    else if (this.y > height) this.y = 0;
+                }
+
+                draw() {
+                    ctx.fillStyle = `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${0.5 + warpFactor})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                // Адаптивное кол-во частиц
+                const count = (width * height) / 10000;
+                for (let i = 0; i < count; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Плавное затухание скорости скролла
+                scrollSpeed += (targetScrollSpeed - scrollSpeed) * 0.1;
+                // Плавное затухание варп-эффекта
+                warpFactor *= 0.95;
+
+                // Обновляем и рисуем частицы
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+
+                // Рисуем линии соединения
+                connectParticles();
+
+                requestAnimationFrame(animate);
+            }
+
+            function connectParticles() {
+                let opacity = 1;
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        let dx = particles[a].x - particles[b].x;
+                        let dy = particles[a].y - particles[b].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+
+                        // Если близко - соединяем
+                        // При варпе дистанция соединения увеличивается
+                        if (distance < connectionDistance + (warpFactor * 100)) {
+                            opacity = 1 - (distance / (connectionDistance + (warpFactor * 100)));
+                            ctx.strokeStyle = `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${opacity * 0.4})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            // Обработчики событий
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.x;
+                mouse.y = e.y;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            // Реакция на скролл
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                const delta = currentScrollY - lastScrollY;
+                
+                // Устанавливаем целевую скорость (положительная = вниз, отрицательная = вверх)
+                targetScrollSpeed = delta * 0.2;
+                
+                // Возвращаем скорость к 0, если не скроллим (через таймер)
+                clearTimeout(window.scrollTimeout);
+                window.scrollTimeout = setTimeout(() => {
+                    targetScrollSpeed = 0;
+                }, 100);
+
+                lastScrollY = currentScrollY;
+            });
+
+            // Реакция на смену вкладки (событие из React)
+            window.addEventListener('page-change', () => {
+                warpFactor = 1.0; // Запускаем эффект "прыжка"
+            });
+
+            // Запуск
+            resize();
+            animate();
+        });
     </script>
 </body>
 </html>
