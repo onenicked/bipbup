@@ -6,8 +6,6 @@
     <title>BIPBUP</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
-    <!-- Preconnect -->
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,15 +26,13 @@
             webvisor:true
        });
     </script>
-    
-    <!-- React -->
+
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
@@ -56,7 +52,6 @@
         overflow-x: hidden;
         margin: 0;
     }
-    /* Canvas на весь фон */
     #background-canvas {
         position: fixed;
         top: 0;
@@ -244,8 +239,6 @@
                 <button onClick={() => navigate('home')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">На главную</button>
             </div>
         );
-
-        // --- НОВЫЕ КОМПОНЕНТЫ ИНСТРУМЕНТОВ ---
 
         const ToolsPage = () => {
             const [activeTool, setActiveTool] = useState('gen');
@@ -491,7 +484,6 @@
                 setPage(p);
                 localStorage.setItem('bipbup_last_page', p);
                 setIsMenuOpen(false);
-                // СОБЫТИЕ ДЛЯ АНИМАЦИИ: Сообщаем фону, что страница сменилась
                 window.dispatchEvent(new Event('page-change'));
             };
             
@@ -626,7 +618,7 @@
         };
         const KnowledgeBase = () => {
             const [pamyatki, setPamyatki] = useState([]);
-            const [project, setProject] = useState('gta5rp'); // 'gta5rp' or 'majestic'
+            const [project, setProject] = useState('gta5rp');
 
             useEffect(() => {
                 const unsub = db.collection("pamyatki")
@@ -1140,7 +1132,6 @@
         root.render(<App />);
     </script>
 
-    <!-- Скрипт "Нейронная Сетка / Plexus" с реакцией на скролл и клики -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('background-canvas');
@@ -1148,19 +1139,14 @@
             
             let width, height;
             let particles = [];
-            const particleCount = 100; // Количество узлов
-            const connectionDistance = 150; // Дистанция соединения
-            const mouseDistance = 200; // Радиус реакции на мышь
-
-            // Переменные состояния анимации
+            const particleCount = 100;
+            const connectionDistance = 150;
+            const mouseDistance = 200;
             let scrollSpeed = 0;
             let targetScrollSpeed = 0;
-            let warpFactor = 0; // Для эффекта "прыжка" при смене вкладок
-            
-            // Мышь
+            let warpFactor = 0;
             let mouse = { x: null, y: null };
 
-            // Инициализация Canvas
             function resize() {
                 width = window.innerWidth;
                 height = window.innerHeight;
@@ -1170,11 +1156,9 @@
             }
             window.addEventListener('resize', resize);
 
-            // Получаем цвет акцента
             const style = getComputedStyle(document.body);
             const accentHex = style.getPropertyValue('--accent').trim() || '#00ff88';
             
-            // Преобразование HEX в RGB для прозрачности
             function hexToRgb(hex) {
                 const bigint = parseInt(hex.replace('#', ''), 16);
                 return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
@@ -1191,14 +1175,11 @@
                 }
 
                 update() {
-                    // Базовое движение
-                    // При варпе ускоряем движение по Y
                     let speedMult = 1 + warpFactor * 50; 
                     
                     this.x += this.vx * (1 + warpFactor * 2);
                     this.y += this.vy + (scrollSpeed * 0.5) + (warpFactor * 10); 
 
-                    // Отталкивание от мыши
                     if (mouse.x != null) {
                         let dx = mouse.x - this.x;
                         let dy = mouse.y - this.y;
@@ -1214,7 +1195,6 @@
                         }
                     }
 
-                    // Границы экрана (бесшовность)
                     if (this.x < 0) this.x = width;
                     else if (this.x > width) this.x = 0;
                     
@@ -1232,7 +1212,6 @@
 
             function initParticles() {
                 particles = [];
-                // Адаптивное кол-во частиц
                 const count = (width * height) / 10000;
                 for (let i = 0; i < count; i++) {
                     particles.push(new Particle());
@@ -1242,18 +1221,14 @@
             function animate() {
                 ctx.clearRect(0, 0, width, height);
 
-                // Плавное затухание скорости скролла
                 scrollSpeed += (targetScrollSpeed - scrollSpeed) * 0.1;
-                // Плавное затухание варп-эффекта
                 warpFactor *= 0.95;
 
-                // Обновляем и рисуем частицы
                 for (let i = 0; i < particles.length; i++) {
                     particles[i].update();
                     particles[i].draw();
                 }
 
-                // Рисуем линии соединения
                 connectParticles();
 
                 requestAnimationFrame(animate);
@@ -1267,8 +1242,6 @@
                         let dy = particles[a].y - particles[b].y;
                         let distance = Math.sqrt(dx * dx + dy * dy);
 
-                        // Если близко - соединяем
-                        // При варпе дистанция соединения увеличивается
                         if (distance < connectionDistance + (warpFactor * 100)) {
                             opacity = 1 - (distance / (connectionDistance + (warpFactor * 100)));
                             ctx.strokeStyle = `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${opacity * 0.4})`;
@@ -1282,7 +1255,6 @@
                 }
             }
 
-            // Обработчики событий
             window.addEventListener('mousemove', (e) => {
                 mouse.x = e.x;
                 mouse.y = e.y;
@@ -1292,16 +1264,13 @@
                 mouse.y = null;
             });
 
-            // Реакция на скролл
             let lastScrollY = window.scrollY;
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 const delta = currentScrollY - lastScrollY;
                 
-                // Устанавливаем целевую скорость (положительная = вниз, отрицательная = вверх)
                 targetScrollSpeed = delta * 0.2;
                 
-                // Возвращаем скорость к 0, если не скроллим (через таймер)
                 clearTimeout(window.scrollTimeout);
                 window.scrollTimeout = setTimeout(() => {
                     targetScrollSpeed = 0;
@@ -1310,12 +1279,10 @@
                 lastScrollY = currentScrollY;
             });
 
-            // Реакция на смену вкладки (событие из React)
             window.addEventListener('page-change', () => {
-                warpFactor = 1.0; // Запускаем эффект "прыжка"
+                warpFactor = 1.0;
             });
 
-            // Запуск
             resize();
             animate();
         });
