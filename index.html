@@ -12,30 +12,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://mc.yandex.ru">
-    <script type="text/javascript" >
-       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-       m[i].l=1*new Date();
-       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-       ym(99936739, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-       });
+
+    <script type="text/plain" data-cookie-category="analytics">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(99936739, "init", {
+             clickmap:true,
+             trackLinks:true,
+             accurateTrackBounce:true,
+             webvisor:true
+        });
     </script>
+
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;900&display=swap" rel="stylesheet">
-   
+    
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
-   
+    
     <style>
     :root {
         --accent: #00ff88;
@@ -167,20 +169,102 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    #cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        backdrop-filter: blur(12px);
+        border-radius: 25px;
+        padding: 16px 24px;
+        z-index: 9999;
+        transform: translateY(100%);
+        transition: transform 0.4s ease;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+    #cookie-banner.show {
+        transform: translateY(0);
+    }
+    #cookie-banner p {
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0 0 12px;
+        color: #ccc;
+    }
+    #cookie-banner a {
+        color: var(--accent);
+        text-decoration: underline;
+        font-weight: 500;
+    }
+    .cookie-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .cookie-btn {
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s;
+    }
+    .cookie-btn.accept {
+        background: var(--accent);
+        color: #000;
+        border: none;
+    }
+    .cookie-btn.reject,
+    .cookie-btn.settings {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #aaa;
+    }
+    .cookie-btn:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+    }
+    @media (max-width: 640px) {
+        #cookie-banner {
+            padding: 16px;
+        }
+        .cookie-buttons {
+            flex-direction: column;
+        }
+        .cookie-btn {
+            width: 100%;
+        }
+    }
     </style>
 </head>
 <body>
     <canvas id="background-canvas"></canvas>
     <noscript><div><img src="https://mc.yandex.ru/watch/99936739" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <div id="cookie-banner">
+        <p>
+            Мы используем файлы cookie и сервисы аналитики <a href="https://policies.google.com/privacy?hl=ru" target="_blank">Яндекс.Метрика</a>, чтобы улучшить работу сайта.
+            <br>
+            Продолжая использовать сайт, вы соглашаетесь с <a href="https://policies.google.com/privacy?hl=ru" target="_blank">политикой конфиденциальности</a>.
+        </p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn accept" id="cookie-accept">Принять</button>
+            <button class="cookie-btn reject" id="cookie-reject">Отклонить</button>
+        </div>
+    </div>
+
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
         const LogoIcon = ({ className }) => (
-            <img
+            <img 
                 src="favicon.ico"
-                alt="Logo"
-                className={className}
-                style={{ width: '32px', height: '32px', objectFit: 'contain'}}
+                alt="Logo" 
+                className={className} 
+                style={{ width: '32px', height: '32px', objectFit: 'contain'}} 
             />
         );
         const firebaseConfig = {
@@ -228,6 +312,7 @@
             { n: 16, name: "Denver", id: "1276" },
             { n: 17, name: "Portland", id: "1338" }
         ];
+
         const ErrorPage = ({ code, text, navigate }) => (
             <div className="error-page">
                 <h1 className="text-9xl font-black accent-text mb-4">{code}</h1>
@@ -235,18 +320,21 @@
                 <button onClick={() => navigate('home')} className="btn-primary px-10 py-4 rounded-xl text-xs uppercase tracking-widest">На главную</button>
             </div>
         );
+
         const ToolsPage = () => {
             const [activeTool, setActiveTool] = useState('gen');
+
             const tools = [
                 { id: 'gen', name: 'RP Никнейм' },
                 { id: 'calc', name: 'Калькулятор' },
                 { id: 'game', name: 'Проверка реакции' },
             ];
+
             return (
                 <div className="max-w-4xl mx-auto py-8 md:py-16 space-y-8 animate-in fade-in duration-500">
                     <div className="flex justify-center flex-wrap gap-4">
                         {tools.map(t => (
-                            <button
+                            <button 
                                 key={t.id}
                                 onClick={() => setActiveTool(t.id)}
                                 className={`px-6 py-3 rounded-xl text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activeTool === t.id ? 'btn-primary' : 'glass-card hover:border-[#00ff88]'}`}
@@ -255,6 +343,7 @@
                             </button>
                         ))}
                     </div>
+
                     <div className="glass-card p-6 md:p-12 rounded-[2.5rem] relative overflow-hidden min-h-[400px]">
                         {activeTool === 'gen' && <NicknameGenerator />}
                         {activeTool === 'calc' && <GrindCalculator />}
@@ -263,10 +352,12 @@
                 </div>
             );
         };
+
         const NicknameGenerator = () => {
             const [gender, setGender] = useState('male');
             const [nation, setNation] = useState('usa');
             const [result, setResult] = useState('');
+
             const data = {
                 usa: {
                     male: ['James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Charles', 'Daniel', 'Matthew'],
@@ -294,17 +385,20 @@
                     last: ['Hernandez', 'Garcia', 'Martinez', 'Gonzalez', 'Lopez', 'Rodriguez', 'Perez', 'Sanchez', 'Ramirez', 'Flores', 'Gomez', 'Torres']
                 }
             };
+
             const generate = () => {
                 const first = data[nation][gender][Math.floor(Math.random() * data[nation][gender].length)];
                 const last = data[nation].last[Math.floor(Math.random() * data[nation].last.length)];
                 setResult(`${first}_${last}`);
             };
+
             const copyToClipboard = () => {
                 if(result) {
                     navigator.clipboard.writeText(result);
                     alert('Никнейм скопирован!');
                 }
             };
+
             return (
                 <div className="text-center space-y-8 animate-in fade-in duration-300">
                     <h3 className="text-2xl font-black italic uppercase tracking-tighter">Генератор Ников</h3>
@@ -320,8 +414,8 @@
                             {id: 'jap', t: 'JAP'},
                             {id: 'mex', t: 'MEX'}
                         ].map(n => (
-                            <button
-                                key={n.id}
+                            <button 
+                                key={n.id} 
                                 onClick={() => setNation(n.id)}
                                 className={`text-[9px] uppercase font-bold py-3 rounded-lg transition-all ${nation === n.id ? 'bg-[#00ff88] text-black shadow-[0_0_15px_#00ff88]' : 'bg-white/5 hover:bg-white/10'}`}
                             >
@@ -332,6 +426,7 @@
                     <div onClick={copyToClipboard} className="cursor-pointer group py-8">
                         <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-[#00ff88] tracking-wider min-h-[60px] group-hover:scale-110 transition-transform">
                             {result || "..."}
+
                         </div>
                         <p className="text-[8px] opacity-0 group-hover:opacity-50 mt-2 uppercase tracking-widest">Нажми чтобы скопировать</p>
                     </div>
@@ -339,12 +434,14 @@
                 </div>
             );
         };
+
         const GrindCalculator = () => {
             const [rate, setRate] = useState('');
             const [hours, setHours] = useState('');
             const [tax, setTax] = useState(0);
             const [vip, setVip] = useState(0);
             const [total, setTotal] = useState(0);
+
             useEffect(() => {
                 const r = parseFloat(rate) || 0;
                 const h = parseFloat(hours) || 0;
@@ -353,6 +450,7 @@
                 if(tax > 0) res = res * (1 - tax/100);
                 setTotal(Math.floor(res));
             }, [rate, hours, tax, vip]);
+
             return (
                 <div className="space-y-8 animate-in fade-in duration-300">
                     <h3 className="text-2xl font-black italic uppercase tracking-tighter text-center">Калькулятор заработка</h3>
@@ -388,11 +486,13 @@
                 </div>
             );
         };
+
         const QueueKiller = () => {
             const [state, setState] = useState('waiting');
             const [startTime, setStartTime] = useState(0);
             const [score, setScore] = useState(null);
             const timeoutRef = useRef(null);
+
             const start = () => {
                 setState('ready');
                 setScore(null);
@@ -402,6 +502,7 @@
                     setStartTime(Date.now());
                 }, randomTime);
             };
+
             const handleClick = () => {
                 if (state === 'ready') {
                     clearTimeout(timeoutRef.current);
@@ -415,13 +516,14 @@
                     start();
                 }
             };
+
             return (
                 <div className="h-full flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in duration-300">
                     <h3 className="text-2xl font-black italic uppercase tracking-tighter">Проверка реакции</h3>
                     <p className="text-xs opacity-40 max-w-sm">Жди зеленого экрана.</p>
                     <p className="text-xs opacity-40 max-w-sm">Как только цвет изменится — кликай как можно быстрее.</p>
-                   
-                    <div
+                    
+                    <div 
                         onClick={handleClick}
                         className={`w-full max-w-md aspect-video rounded-3xl flex items-center justify-center cursor-pointer transition-all duration-100 shadow-2xl select-none
                             ${state === 'waiting' || state === 'result' ? 'bg-white/5 hover:border-[#00ff88] border-2 border-transparent' : ''}
@@ -442,37 +544,7 @@
                 </div>
             );
         };
-        const CookieConsent = () => {
-            const [show, setShow] = useState(!localStorage.getItem("cookieConsent"));
-        
-            if (!show) return null;
-        
-            const accept = () => {
-                localStorage.setItem("cookieConsent", "accepted");
-                setShow(false);
-            };
-        
-            return (
-                <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:bottom-6 z-[9999] max-w-sm">
-                    <div className="glass-card p-5 rounded-2xl shadow-2xl border border-[#00ff88]/20 text-sm">
-                        <p className="mb-4 opacity-90">
-                            Мы используем cookies и Yandex Metrika для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с{' '}
-                            <a href="https://policies.google.com/technologies/cookies" target="_blank" className="underline hover:text-[#00ff88]">
-                                политикой
-                            </a>.
-                        </p>
-                        <div className="flex gap-3 justify-end">
-                            <button
-                                onClick={accept}
-                                className="btn-primary px-6 py-2.5 rounded-xl text-xs uppercase tracking-widest font-bold"
-                            >
-                                Принять
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+
         const App = () => {
             const [page, setPage] = useState(() => {
                 return localStorage.getItem('bipbup_last_page') || 'home';
@@ -480,7 +552,7 @@
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
             const [isMenuOpen, setIsMenuOpen] = useState(false);
-           
+            
             useEffect(() => {
                 const unsub = auth.onAuthStateChanged(u => {
                     setUser(u);
@@ -488,18 +560,18 @@
                 });
                 return () => unsub();
             }, []);
-           
-            const navigate = (p) => {
-                window.scrollTo({top: 0, behavior: 'smooth'});
+            
+            const navigate = (p) => { 
+                window.scrollTo({top: 0, behavior: 'smooth'}); 
                 setPage(p);
                 localStorage.setItem('bipbup_last_page', p);
                 setIsMenuOpen(false);
                 window.dispatchEvent(new Event('page-change'));
             };
-           
+            
             const renderPage = () => {
                 if (loading) return <div className="flex justify-center py-20 accent-text animate-pulse">Загрузка данных...</div>;
-               
+                
                 switch(page) {
                     case 'home': return <Home navigate={navigate} />;
                     case 'knowledge': return <KnowledgeBase navigate={navigate} />;
@@ -560,7 +632,6 @@
                             <a href="https://t.me/balenciaga_telegram" className="hover:text-[#00ff88] transition">BugHunt Feedback</a>
                         </div>
                     </footer>
-                    <CookieConsent />
                 </div>
             );
         };
@@ -630,6 +701,7 @@
         const KnowledgeBase = () => {
             const [pamyatki, setPamyatki] = useState([]);
             const [project, setProject] = useState('gta5rp');
+
             useEffect(() => {
                 const unsub = db.collection("pamyatki")
                     .where("status", "==", "approved")
@@ -640,10 +712,12 @@
                     }, err => console.error(err));
                 return () => unsub();
             }, []);
+
             const currentServers = project === 'gta5rp' ? GTA5RP_SERVERS : MAJESTIC_SERVERS;
             const forumUrl = project === 'gta5rp'
                 ? 'https://forum.gta5rp.com/forums/zakonodatelnaja-baza.'
                 : 'https://forum.majestic-rp.ru/forums/zakonodatelstvo.';
+
             return (
                 <div className="space-y-12 md:space-y-16 animate-in fade-in duration-500">
                     <div className="space-y-8 md:space-y-12">
@@ -652,14 +726,14 @@
                             <p className="text-[10px] md:text-xs opacity-30 uppercase tracking-widest">Выберите проект и кликните на нужный сервер</p>
                         </div>
                         <div className="flex justify-center gap-4 mb-8">
-                            <button
-                                onClick={() => setProject('gta5rp')}
+                            <button 
+                                onClick={() => setProject('gta5rp')} 
                                 className={`px-8 py-3 rounded-xl text-xs uppercase tracking-widest font-bold transition-all duration-300 ${project === 'gta5rp' ? 'btn-primary' : 'glass-card hover:border-accent'}`}
                             >
                                 GTA5RP
                             </button>
-                            <button
-                                onClick={() => setProject('majestic')}
+                            <button 
+                                onClick={() => setProject('majestic')} 
                                 className={`px-8 py-3 rounded-xl text-xs uppercase tracking-widest font-bold transition-all duration-300 ${project === 'majestic' ? 'btn-primary' : 'glass-card hover:border-accent'}`}
                             >
                                 Majestic RP
@@ -740,21 +814,21 @@
             const [nebulaUrl, setNebulaUrl] = useState(localStorage.getItem('cached_nebula') || "");
             const [isLoading, setIsLoading] = useState(false);
             useEffect(() => {
-                const videoUrl = "https://vkvideo.ru/video_ext.php?oid=-209507445&id=456239418&hash=6020c5cd32d115f9&hd=4";
+                const videoUrl = "https://vkvideo.ru/video_ext.php?oid=-209507445&id=456239417&hash=cf587ef6befd4516&hd=4";
                 setVkUrl(videoUrl);
                 localStorage.setItem('cached_vk', videoUrl);
                 const fetchAutomated = async () => {
                     setIsLoading(true);
                     try {
-                        const ytRes = await fetch(`https://test.cors.workers.dev/?${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCjrmposCYp6sJsT2VybjH9A')}`);
-                        const ytData = await ytRes.text();
-                        const ytId = ytData.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
+                        const ytRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=UCjrmposCYp6sJsT2VybjH9A')}`);
+                        const ytData = await ytRes.json();
+                        const ytId = ytData.contents?.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
                         if (ytId) {
                             const url = `https://www.youtube.com/embed/${ytId}?rel=0`;
                             setYtUrl(url);
                             localStorage.setItem('cached_yt', url);
                         }
-                        const nebulaRes = await fetch(`https://test.cors.workers.dev/?${encodeURIComponent('https://api.github.com/repos/XQR4D/Nebula/releases/latest')}`);
+                        const nebulaRes = await fetch('https://api.github.com/repos/XQR4D/Nebula/releases/latest');
                         const nebulaData = await nebulaRes.json();
                         const asset = nebulaData.assets?.find(a => a.name.endsWith('.mp4'));
                         if (asset) {
@@ -773,11 +847,11 @@
                     <div className="glass-card p-2 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#00ff88]/5 relative">
                         <div className="aspect-video bg-black rounded-[1rem] md:rounded-[1.8rem] overflow-hidden">
                             {players[activePlayer] ? (
-                                <iframe
+                                <iframe 
                                     key={activePlayer + players[activePlayer]}
-                                    className="w-full h-full"
-                                    src={players[activePlayer]}
-                                    allowFullScreen
+                                    className="w-full h-full" 
+                                    src={players[activePlayer]} 
+                                    allowFullScreen 
                                     allow="autoplay; encrypted-media; fullscreen"
                                     frameBorder="0"
                                 ></iframe>
@@ -789,15 +863,15 @@
                             )}
                         </div>
                     </div>
-                   
+                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                         <div className="glass-card p-6 md:p-8 rounded-3xl space-y-6">
                             <h4 className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] opacity-30">Выбор плеера</h4>
                             <div className="flex flex-wrap gap-3 md:gap-4">
                                 {['youtube', 'vk', 'nebula'].map(p => (
-                                    <button
-                                        key={p}
-                                        onClick={() => setActivePlayer(p)}
+                                    <button 
+                                        key={p} 
+                                        onClick={() => setActivePlayer(p)} 
                                         className={`flex-grow md:flex-none px-4 md:px-6 py-3 rounded-xl text-[9px] md:text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${activePlayer === p ? 'bg-[#00ff88] text-black shadow-[0_0_20px_#00ff88]' : 'bg-white/5 opacity-40 hover:opacity-100'}`}
                                     >
                                         {p}
@@ -844,8 +918,8 @@
                 e.preventDefault();
                 const token = await verifyCaptcha();
                 if (!token) return;
-                const promise = mode === 'login'
-                    ? auth.signInWithEmailAndPassword(email, pass)
+                const promise = mode === 'login' 
+                    ? auth.signInWithEmailAndPassword(email, pass) 
                     : auth.createUserWithEmailAndPassword(email, pass);
                 promise.then(() => navigate('lk')).catch(e => alert(e.message));
             };
@@ -876,7 +950,7 @@
                             <button onClick={() => setMode('login')} className={`text-[10px] uppercase font-bold tracking-widest transition ${mode === 'login' ? 'text-[#00ff88]' : 'opacity-20'}`}>Логин</button>
                             <button onClick={() => setMode('reg')} className={`text-[10px] uppercase font-bold tracking-widest transition ${mode === 'reg' ? 'text-[#00ff88]' : 'opacity-20'}`}>Регистрация</button>
                         </div>
-                       
+                        
                         {mode === 'reset' ? (
                             <form onSubmit={handleReset} className="space-y-4 animate-in fade-in duration-300">
                                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-center">Восстановление</h3>
@@ -915,7 +989,7 @@
                                         </svg>
                                         <span className="text-[9px] uppercase font-black tracking-widest opacity-40 group-hover:opacity-100 group-hover:text-[#00ff88]">Google</span>
                                     </button>
-                                   
+                                    
                                     <button onClick={handleGithubLogin} className="glass-card group flex flex-col items-center justify-center py-5 rounded-2xl transition-all duration-300 hover:border-[#00ff88]/50">
                                         <svg className="w-5 h-5 mb-2 opacity-100" viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
@@ -933,7 +1007,7 @@
             const [isUploading, setIsUploading] = useState(false);
             const [avatar, setAvatar] = useState(user?.photoURL);
             const [moderationCount, setModerationCount] = useState(0);
-            const [showModal, setShowModal] = useState(null);
+            const [showModal, setShowModal] = useState(null); 
             const [pendingPamyatki, setPendingPamyatki] = useState([]);
             const fileInput = useRef();
             useEffect(() => {
@@ -1048,7 +1122,7 @@
                             <input type="file" ref={fileInput} className="hidden" accept="image/*" onChange={uploadAvatar} />
                             {isUploading && <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#00ff88] text-black text-[8px] px-3 py-1 rounded-full font-bold animate-bounce">UP...</div>}
                         </div>
-                       
+                        
                         <div className="text-center md:text-left space-y-4">
                             <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase">{user.displayName || 'Пользователь'}</h2>
                             <p className="text-xs md:text-sm opacity-30 font-medium tracking-widest uppercase">{user.email}</p>
@@ -1066,7 +1140,7 @@
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="glass-card p-8 md:p-10 rounded-[2.5rem] space-y-8">
                             <h3 className="text-lg font-black italic uppercase tracking-tighter accent-text">Настройки профиля</h3>
-                           
+                            
                             <form onSubmit={changeNickname} className="space-y-4">
                                 <label className="text-[9px] uppercase opacity-30 font-bold tracking-[0.2em]">Изменить никнейм</label>
                                 <input name="new_nickname" type="text" placeholder="Новый никнейм" defaultValue={user.displayName} />
@@ -1139,11 +1213,59 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+
+    <script>
+        function hasCookieConsent() {
+            return localStorage.getItem('cookieConsent') === 'accepted';
+        }
+
+        function showCookieBanner() {
+            const banner = document.getElementById('cookie-banner');
+            if (banner && !hasCookieConsent()) {
+                setTimeout(() => {
+                    banner.classList.add('show');
+                }, 800);
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            document.getElementById('cookie-banner').classList.remove('show');
+            
+            if (typeof ym === 'undefined' || !ym) {
+                const script = document.createElement('script');
+                script.src = 'https://mc.yandex.ru/metrika/tag.js';
+                script.async = true;
+                script.onload = function() {
+                    ym(99936739, 'init', {
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true,
+                        webvisor: true
+                    });
+                };
+                document.head.appendChild(script);
+            }
+        }
+
+        function rejectCookies() {
+            localStorage.setItem('cookieConsent', 'rejected');
+            document.getElementById('cookie-banner').classList.remove('show');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            showCookieBanner();
+
+            document.getElementById('cookie-accept')?.addEventListener('click', acceptCookies);
+            document.getElementById('cookie-reject')?.addEventListener('click', rejectCookies);
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('background-canvas');
             const ctx = canvas.getContext('2d');
-           
+            
             let width, height;
             let particles = [];
             const particleCount = 100;
@@ -1153,6 +1275,7 @@
             let targetScrollSpeed = 0;
             let warpFactor = 0;
             let mouse = { x: null, y: null };
+
             function resize() {
                 width = window.innerWidth;
                 height = window.innerHeight;
@@ -1161,14 +1284,16 @@
                 initParticles();
             }
             window.addEventListener('resize', resize);
+
             const style = getComputedStyle(document.body);
             const accentHex = style.getPropertyValue('--accent').trim() || '#00ff88';
-           
+            
             function hexToRgb(hex) {
                 const bigint = parseInt(hex.replace('#', ''), 16);
                 return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
             }
             const accentRgb = hexToRgb(accentHex);
+
             class Particle {
                 constructor() {
                     this.x = Math.random() * width;
@@ -1177,11 +1302,13 @@
                     this.vy = (Math.random() - 0.5) * 0.5;
                     this.size = Math.random() * 2 + 1;
                 }
+
                 update() {
-                    let speedMult = 1 + warpFactor * 50;
-                   
+                    let speedMult = 1 + warpFactor * 50; 
+                    
                     this.x += this.vx * (1 + warpFactor * 2);
-                    this.y += this.vy + (scrollSpeed * 0.5) + (warpFactor * 10);
+                    this.y += this.vy + (scrollSpeed * 0.5) + (warpFactor * 10); 
+
                     if (mouse.x != null) {
                         let dx = mouse.x - this.x;
                         let dy = mouse.y - this.y;
@@ -1196,12 +1323,14 @@
                             this.y -= directionY;
                         }
                     }
+
                     if (this.x < 0) this.x = width;
                     else if (this.x > width) this.x = 0;
-                   
+                    
                     if (this.y < 0) this.y = height;
                     else if (this.y > height) this.y = 0;
                 }
+
                 draw() {
                     ctx.fillStyle = `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${0.5 + warpFactor})`;
                     ctx.beginPath();
@@ -1209,6 +1338,7 @@
                     ctx.fill();
                 }
             }
+
             function initParticles() {
                 particles = [];
                 const count = (width * height) / 10000;
@@ -1216,17 +1346,23 @@
                     particles.push(new Particle());
                 }
             }
+
             function animate() {
                 ctx.clearRect(0, 0, width, height);
+
                 scrollSpeed += (targetScrollSpeed - scrollSpeed) * 0.1;
                 warpFactor *= 0.95;
+
                 for (let i = 0; i < particles.length; i++) {
                     particles[i].update();
                     particles[i].draw();
                 }
+
                 connectParticles();
+
                 requestAnimationFrame(animate);
             }
+
             function connectParticles() {
                 let opacity = 1;
                 for (let a = 0; a < particles.length; a++) {
@@ -1234,6 +1370,7 @@
                         let dx = particles[a].x - particles[b].x;
                         let dy = particles[a].y - particles[b].y;
                         let distance = Math.sqrt(dx * dx + dy * dy);
+
                         if (distance < connectionDistance + (warpFactor * 100)) {
                             opacity = 1 - (distance / (connectionDistance + (warpFactor * 100)));
                             ctx.strokeStyle = `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, ${opacity * 0.4})`;
@@ -1246,6 +1383,7 @@
                     }
                 }
             }
+
             window.addEventListener('mousemove', (e) => {
                 mouse.x = e.x;
                 mouse.y = e.y;
@@ -1254,22 +1392,26 @@
                 mouse.x = null;
                 mouse.y = null;
             });
+
             let lastScrollY = window.scrollY;
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 const delta = currentScrollY - lastScrollY;
-               
+                
                 targetScrollSpeed = delta * 0.2;
-               
+                
                 clearTimeout(window.scrollTimeout);
                 window.scrollTimeout = setTimeout(() => {
                     targetScrollSpeed = 0;
                 }, 100);
+
                 lastScrollY = currentScrollY;
             });
+
             window.addEventListener('page-change', () => {
                 warpFactor = 1.0;
             });
+
             resize();
             animate();
         });
