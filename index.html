@@ -586,8 +586,23 @@
             return (
                 <div className="min-h-screen flex flex-col max-w-6xl mx-auto px-4 md:px-6">
                     <header className="flex justify-between items-center py-6 md:py-10">
-                        <div onClick={() => navigate('home')} className="z-[1100] text-xl md:text-2xl font-black tracking-tighter cursor-pointer flex items-center gap-3 group">
-                            BIPBUP
+                        <div
+                            onClick={() => navigate('home')}
+                            className="z-[1100] cursor-pointer flex items-center">
+                            <img
+                                src="images/logobip.png"
+                                alt="BIPBUP Logo"
+                                className="
+                                    h-10          /* базовая высота на мобильных */
+                                    md:h-14       /* десктоп — чуть выше */
+                                    lg:h-16       /* очень широкие экраны */
+                                    w-auto
+                                    max-w-[180px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[320px]
+                                    object-contain
+                                    transition-transform duration-300
+                                    hover:scale-105
+                                "
+                            />
                         </div>
                         <nav className="hidden md:flex gap-10 text-[10px] font-medium uppercase tracking-[0.2em] items-center">
                             <button onClick={() => navigate('home')} className={`nav-link ${page === 'home' ? 'text-[#00ff88]' : ''}`}>Главная</button>
